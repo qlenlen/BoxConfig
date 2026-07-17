@@ -1,0 +1,784 @@
+{
+  "log": {
+    "disabled": false,
+    "level": "error",
+    "output": "/data/user/0/com.boxproxy.box/files/box/run/sing-box.log",
+    "timestamp": true
+  },
+  "http_clients": [
+    {
+      "tag": "direct-client",
+      "detour": "direct"
+    },
+    {
+      "tag": "proxy-client",
+      "detour": "📦 ALL"
+    }
+  ],
+  "providers": [
+    {
+      "tag": "A",
+      "type": "remote",
+      "url": "http://127.0.0.1:3000/download/bp?target=sing-box",
+      "http_client": "direct-client",
+      "update_interval": "24h0m0s",
+      "path": "./providers/A.json"
+    },
+    {
+      "tag": "B",
+      "type": "remote",
+      "url": "http://127.0.0.1:3000/download/glados?target=sing-box",
+      "http_client": "direct-client",
+      "update_interval": "24h0m0s",
+      "path": "./providers/B.json"
+    },
+    {
+      "tag": "D",
+      "type": "remote",
+      "url": "http://127.0.0.1:3000/download/tg?target=sing-box",
+      "http_client": "direct-client",
+      "update_interval": "24h0m0s",
+      "path": "./providers/D.json"
+    }
+  ],
+  "experimental": {
+    "urltest_unified_delay": true,
+    "clash_api": {
+      "external_controller": "0.0.0.0:9090",
+      "secret": "",
+      "external_ui": "dashboard",
+      "external_ui_download_url": "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+      "external_ui_http_client": "direct-client",
+      "default_mode": "rule",
+      "access_control_allow_origin": [
+        "*"
+      ],
+      "access_control_allow_private_network": true
+    },
+    "cache_file": {
+      "enabled": true,
+      "path": "./cache.db",
+      "cache_id": "v3",
+      "store_fakeip": true,
+      "store_dns": true
+    }
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns_hosts",
+        "type": "hosts",
+        "predefined": {
+          "dns.google": [
+            "8.8.8.8",
+            "8.8.4.4"
+          ],
+          "dns.quad9.net": [
+            "149.112.112.112",
+            "9.9.9.9"
+          ],
+          "doh.pub": [
+            "1.12.12.12",
+            "120.53.53.53"
+          ]
+        }
+      },
+      {
+        "type": "udp",
+        "tag": "smart-dns",
+        "server": "127.0.0.1",
+        "server_port": 1451
+      },
+      {
+        "type": "h3",
+        "tag": "ali-h3",
+        "server": "223.5.5.5"
+      },
+      {
+        "type": "https",
+        "tag": "tencent-doh",
+        "server": "doh.pub",
+        "domain_resolver": "dns_hosts"
+      },
+      {
+        "type": "https",
+        "tag": "360-doh",
+        "server": "doh.360.cn",
+        "path": "/dns-query",
+        "domain_resolver": "ali-h3"
+      },
+      {
+        "type": "h3",
+        "tag": "google-h3",
+        "server": "dns.google",
+        "path": "/dns-query",
+        "domain_resolver": "dns_hosts",
+        "detour": "📦 ALL"
+      },
+      {
+        "type": "h3",
+        "tag": "cloudflare-h3",
+        "server": "cloudflare-dns.com",
+        "path": "/dns-query",
+        "domain_resolver": "google-h3",
+        "detour": "📦 ALL"
+      },
+      {
+        "tag": "quad9-doq",
+        "type": "quic",
+        "server": "dns.quad9.net",
+        "domain_resolver": "dns_hosts",
+        "detour": "📦 ALL"
+      },
+      {
+        "tag": "direct-dns",
+        "type": "group",
+        "servers": [
+          "ali-h3",
+          "tencent-doh",
+          "360-doh"
+        ]
+      },
+      {
+        "tag": "proxy-dns",
+        "type": "group",
+        "servers": [
+          "google-h3",
+          "cloudflare-h3",
+          "quad9-doq"
+        ]
+      },
+      {
+        "type": "fakeip",
+        "tag": "fakeip-dns",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      }
+    ],
+    "rules": [
+      {
+        "rule_set": [
+          "Google_FCM"
+        ],
+        "server": "google-h3"
+      },
+      {
+        "clash_mode": "Direct",
+        "server": "direct-dns"
+      },
+      {
+        "clash_mode": "Global",
+        "server": "proxy-dns"
+      },
+      {
+        "rule_set": [
+          "Webrtc"
+        ],
+        "action": "reject"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "AllowAds",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "cn-ads",
+              "category-ads-all"
+            ]
+          }
+        ],
+        "action": "reject",
+        "method": "drop"
+      },
+      {
+        "rule_set": [
+          "cn",
+          "Private",
+          "fakeip_filter"
+        ],
+        "server": "direct-dns"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": [
+              "!cn",
+              "gfw"
+            ]
+          },
+          {
+            "query_type": [
+              "A",
+              "AAAA"
+            ]
+          }
+        ],
+        "server": "fakeip-dns",
+        "rewrite_ttl": 1
+      },
+      {
+        "action": "evaluate",
+        "server": "proxy-dns"
+      },
+      {
+        "match_response": true,
+        "response_rcode": "SERVFAIL",
+        "action": "route",
+        "server": "direct-dns"
+      },
+      {
+        "match_response": true,
+        "response_rcode": "NOERROR",
+        "ip_accept_any": true,
+        "invert": true,
+        "action": "respond"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "match_response": true,
+            "ip_is_private": true
+          },
+          {
+            "match_response": true,
+            "rule_set": [
+              "cn_ip"
+            ]
+          }
+        ],
+        "action": "route",
+        "server": "direct-dns"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "route",
+        "server": "fakeip-dns",
+        "rewrite_ttl": 1
+      }
+    ],
+    "final": "proxy-dns",
+    "strategy": "prefer_ipv4",
+    "optimistic": {
+      "enabled": true,
+      "timeout": "48h0m0s"
+    },
+    "reverse_mapping": true
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "::",
+      "listen_port": 7890,
+      "set_system_proxy": false
+    },
+    {
+      "type": "tproxy",
+      "tag": "tproxy-in",
+      "listen": "::",
+      "listen_port": 9898
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "📦 ALL",
+      "type": "selector",
+      "outbounds": [
+        "🚀 Auto",
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🗽 United States",
+        "🛡️ Germany",
+        "🇰🇷 Korea",
+        "🇲🇾 Malaysia",
+      ],
+      "default": "🚀 Auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🃏 AI",
+      "type": "selector",
+      "outbounds": [
+        "🚀 Auto",
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🗽 United States",
+        "🛡️ Germany",
+        "🇰🇷 Korea",
+        "🇲🇾 Malaysia",
+      ],
+      "default": "🚀 Auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🔞 Porn",
+      "type": "selector",
+      "outbounds": [
+        "🚀 Auto",
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🗽 United States",
+        "🛡️ Germany",
+        "🇰🇷 Korea",
+        "🇲🇾 Malaysia",
+      ],
+      "default": "🚀 Auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🧭 Google Services",
+      "type": "selector",
+      "outbounds": [
+        "🚀 Auto",
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🗽 United States",
+        "🛡️ Germany",
+        "🇰🇷 Korea",
+        "🇲🇾 Malaysia",
+      ],
+      "default": "🚀 Auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🔔 Google FCM",
+      "type": "selector",
+      "outbounds": [
+        "direct",
+        "🚀 Auto",
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🗽 United States",
+        "🛡️ Germany",
+        "🇰🇷 Korea",
+        "🇲🇾 Malaysia",
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "🚀 Auto",
+      "outbounds": [
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🗽 United States",
+      ],
+      "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
+      "idle_timeout": "30m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🍹 Hong Kong",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)香港|hk|hongkong|🇭🇰",
+      "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🍍 Taiwan",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)台湾|tw|taiwan|taipei|🇹🇼",
+      "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🎡 Singapore",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)新加坡|sg|singapore|狮城|🇸🇬",
+      "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "⛩️ Japan",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)日本|jp|japan|tokyo|osaka|东京|🇯🇵",
+      "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🗽 United States",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)美国|us|united states|america|los angeles|san jose|silicon valley|🇺🇸",
+      "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🛡️ Germany",
+      "type": "urltest",
+      "use_all_providers": true,
+      "exclude": "(?i)Dedicated",
+      "include": "(?i)德国|de|germany|🇩🇪",
+      "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🇰🇷 Korea",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)韩国|kr|korea|seoul|🇰🇷",
+      "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🇲🇾 Malaysia",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)马来西亚|my|malaysia|kuala lumpur|🇲🇾",
+      "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
+      "tolerance": 50,
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "direct",
+      "type": "direct",
+      "domain_resolver": "direct-dns"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    }
+  ],
+  "route": {
+    "default_domain_resolver": "direct-dns",
+    "final": "📦 ALL",
+    "auto_detect_interface": true,
+    "find_process": true,
+    "rule_set": [
+      {
+        "tag": "cn",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/cn.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "cn_ip",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/cn_ip.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "!cn",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/not_cn.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/CHIZI-0618/v2ray-rules-dat/raw/refs/heads/release/singbox_rule_set/geosite-geolocation-!cn.srs",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "Webrtc",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/Webrtc.srs",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/Webrtc/Webrtc.srs",
+        "update_interval": "7d",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "adobe",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/adobe.srs",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/adobe.srs",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "ai",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/ai.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "cn-ads",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/cn-ads.srs",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/Cats-Team/AdRules/main/adrules-singbox.srs",
+        "update_interval": "1d",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "category-ads-all",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-category-ads-all.srs",
+        "update_interval": "24h",
+        "path": "./rule_provider/category-ads-all.srs",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "Google_FCM",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/Google_FCM.srs",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/GoogleFCM/GoogleFCM.srs",
+        "update_interval": "7d",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "youtube",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-youtube.srs",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "google",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google.srs",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "Private",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/private.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/private.srs",
+        "update_interval": "7d",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "private_ip",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://v6.gh-proxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/privateip.srs",
+        "path": "./rule_provider/private_ip.srs"
+      },
+      {
+        "tag": "gfw",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/gfw.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/gfw.srs",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "fakeip_filter",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/fakeip_filter.srs",
+        "url": "https://v6.gh-proxy.com/https://raw.githubusercontent.com/QuixoticHeart/rule-set/ruleset/singbox/version2/fake-ip-filter.srs"
+      },
+      {
+        "tag": "pornhub",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/pornhub.srs",
+        "url": "https://v6.gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/pornhub.srs"
+      }
+    ],
+    "rules": [
+      {
+        "action": "sniff",
+        "sniffer": [
+          "http",
+          "tls",
+          "quic",
+          "dns"
+        ]
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "protocol": "dns"
+          },
+          {
+            "port": 53
+          }
+        ],
+        "action": "hijack-dns"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "ip_version": 6
+          },
+          {
+            "default_interface_address": [
+              "2000::/3"
+            ],
+            "invert": true
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "AllowAds",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "cn-ads",
+              "category-ads-all"
+            ]
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "rule_set": [
+          "Webrtc",
+          "adobe"
+        ],
+        "action": "reject",
+        "method": "default"
+      },
+      {
+        "network": "icmp",
+        "outbound": "direct"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "network": "udp",
+            "port": 443
+          },
+          {
+            "rule_set": [
+              "!cn",
+              "gfw"
+            ]
+          }
+        ],
+        "action": "reject",
+        "method": "default"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "📦 ALL"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "ip_is_private": true
+          },
+          {
+            "rule_set": "Private"
+          }
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "ai"
+        ],
+        "outbound": "🃏 AI"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "rule_set": "Google_FCM"
+          },
+          {
+            "port": 5228
+          }
+        ],
+        "outbound": "🔔 Google FCM"
+      },
+      {
+        "rule_set": [
+          "youtube",
+          "google"
+        ],
+        "outbound": "🧭 Google Services"
+      },
+      {
+        "rule_set": [
+          "pornhub"
+        ],
+        "outbound": "🔞 Porn"
+      },
+      {
+        "rule_set": [
+          "!cn",
+          "gfw"
+        ],
+        "outbound": "📦 ALL"
+      },
+      {
+        "rule_set": [
+          "cn"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "action": "resolve",
+        "match_only": true
+      },
+      {
+        "rule_set": [
+          "private_ip",
+          "cn_ip"
+        ],
+        "outbound": "direct"
+      }
+    ]
+  }
+}
