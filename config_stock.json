@@ -1,0 +1,291 @@
+{
+  "dns": {
+    "servers": [
+      {
+        "tag": "hosts_fix",
+        "type": "hosts",
+        "predefined": {
+          "dns.alidns.com": [
+            "223.5.5.5",
+            "223.6.6.6"
+          ],
+          "doh.pub": [
+            "1.12.12.21",
+            "120.53.53.53"
+          ],
+          "dns.google": [
+            "8.8.8.8",
+            "8.8.4.4"
+          ],
+          "cloudflare-dns.com": [
+            "104.16.248.249",
+            "104.16.249.249"
+          ]
+        }
+      },
+      {
+        "tag": "cf-doh",
+        "type": "https",
+        "server": "cloudflare-dns.com",
+        "detour": "Manual",
+        "domain_resolver": "hosts_fix"
+      },
+      {
+        "tag": "gg-doh",
+        "type": "https",
+        "server": "dns.google",
+        "detour": "Manual",
+        "domain_resolver": "hosts_fix"
+      },
+      {
+        "tag": "ali-doh",
+        "type": "https",
+        "server": "dns.alidns.com",
+        "domain_resolver": "hosts_fix"
+      },
+      {
+        "tag": "tx-doh",
+        "type": "https",
+        "server": "doh.pub",
+        "domain_resolver": "hosts_fix"
+      },
+      {
+        "tag": "ali-udp",
+        "type": "udp",
+        "server": "223.5.5.5"
+      },
+      {
+        "tag": "tx-udp",
+        "type": "udp",
+        "server": "119.29.29.29"
+      },
+      {
+        "tag": "fakeip",
+        "type": "fakeip",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      },
+      {
+        "tag": "local",
+        "type": "local",
+        "neighbor_domain": [
+          ".local",
+          ".lan"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "rule_set": [
+          "ChinaDomain"
+        ],
+        "action": "route",
+        "server": "ali-udp"
+      },
+      {
+        "query_type": "HTTPS",
+        "action": "reject"
+      },
+      {
+        "domain_suffix": [
+          "lancache.steamcontent.com",
+          "10099.com.cn",
+          "msftconnecttest.com",
+          "msftncsi.com",
+          "local",
+          "lan",
+          "home",
+          "internal",
+          "corp",
+          "example.com"
+        ],
+        "server": "local"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "route",
+        "server": "fakeip",
+        "rewrite_ttl": 1
+      },
+      {
+        "clash_mode": "Global",
+        "action": "route",
+        "server": "fakeip"
+      },
+      {
+        "clash_mode": "Direct",
+        "action": "route",
+        "server": "local"
+      }
+    ],
+    "reverse_mapping": true,
+    "strategy": "ipv4_only",
+    "optimistic": true,
+    "final": "ali-doh"
+  },
+  "outbounds": [
+    {
+      "tag": "Bridge",
+      "type": "bridge"
+    },
+    {
+      "tag": "Direct",
+      "type": "direct"
+    },
+    {
+      "tag": "Manual",
+      "type": "selector",
+      "outbounds": [
+        "Fast-B1-1",
+        "Direct"
+      ],
+      "default": "Direct",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "Fast-B1-1",
+      "type": "shadowsocks",
+      "server": "709b138f-c2a8-432f-807a-fdfb2ff16f25.r4.railgun.dnsbot.net",
+      "server_port": 2377,
+      "method": "chacha20-ietf-poly1305",
+      "password": "x1zlq0usswpb4fp3smq081zqk13ae6z8",
+      "udp_over_tcp": {
+        "enabled": true,
+        "version": 1
+      },
+      "plugin": "obfs-local",
+      "plugin_opts": "obfs=tls;obfs-host=725e3fd7acdea4b2.default.nintendo.it:65418"
+    }
+  ],
+  "route": {
+    "rule_set": [
+      {
+        "tag": "Proxy",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://v6.gh-proxy.org/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/Proxy.srs"
+      },
+      {
+        "tag": "ChinaDomain",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://v6.gh-proxy.org/https://github.com/Repcz/Tool/raw/X/sing-box/Rules/ChinaDomain.srs"
+      },
+      {
+        "tag": "ChinaIP",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://v6.gh-proxy.org/https://github.com/Loyalsoldier/geoip/raw/release/srs/cn.srs"
+      }
+    ],
+    "rules": [
+      {
+        "preferred_by": [
+          "Bridge"
+        ],
+        "rule_set": [
+          "ChinaIP"
+        ],
+        "action": "route",
+        "outbound": "Bridge"
+      },
+      {
+        "action": "sniff",
+        "sniffer": [
+          "http",
+          "tls",
+          "quic",
+          "dns"
+        ]
+      },
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "ip_is_private": true,
+        "action": "route",
+        "outbound": "Direct"
+      },
+      {
+        "clash_mode": "Direct",
+        "action": "route",
+        "outbound": "Direct"
+      },
+      {
+        "clash_mode": "Global",
+        "action": "route",
+        "outbound": "Manual"
+      },
+      {
+        "rule_set": [
+          "Proxy"
+        ],
+        "action": "route",
+        "outbound": "Manual"
+      },
+      {
+        "action": "resolve"
+      },
+      {
+        "rule_set": [
+          "ChinaDomain",
+          "ChinaIP"
+        ],
+        "action": "route",
+        "outbound": "Direct"
+      }
+    ],
+    "auto_detect_interface": true,
+    "default_http_client": "default",
+    "default_domain_resolver": "ali-udp"
+  },
+  "log": {
+    "disabled": false,
+    "level": "info",
+    "output": "bridge-client.log",
+    "timestamp": true
+  },
+  "http_clients": [
+    {
+      "tag": "default",
+      "version": 2,
+      "detour": "Manual"
+    }
+  ],
+  "experimental": {
+    "clash_api": {
+      "external_controller": "0.0.0.0:9090",
+      "secret": "",
+      "external_ui": "dashboard",
+      "external_ui_download_url": "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+      "default_mode": "rule",
+      "access_control_allow_origin": [
+        "*"
+      ],
+      "access_control_allow_private_network": true
+    }
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun",
+      "address": [
+        "172.18.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "mtu": 9000,
+      "dns_mode": "hijack",
+      "dns_address": [
+        "172.18.0.2",
+        "fdfe:dcba:9876::2"
+      ],
+      "stack": "mixed",
+      "auto_route": true,
+      "strict_route": true
+    }
+  ]
+}

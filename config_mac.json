@@ -730,7 +730,8 @@
       },
       {
         "rule_set": [
-          "private_ip", "cn_ip"
+          "private_ip",
+          "cn_ip"
         ],
         "outbound": "direct"
       }
