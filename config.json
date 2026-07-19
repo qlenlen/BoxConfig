@@ -35,7 +35,7 @@
     {
       "tag": "D",
       "type": "remote",
-      "url": "http://127.0.0.1:3000/download/tg?target=sing-box",
+      "url": "http://127.0.0.1:3000/download/cf?target=sing-box",
       "http_client": "direct-client",
       "update_interval": "24h0m0s",
       "path": "./providers/D.json"
@@ -186,8 +186,8 @@
           },
           {
             "rule_set": [
-              "cn-ads",
-              "category-ads-all"
+              "ads",
+              "geosite-category-ads-all"
             ]
           }
         ],
@@ -197,8 +197,8 @@
       {
         "rule_set": [
           "cn",
-          "Private",
-          "fakeip_filter"
+          "private",
+          "fakeip-filter"
         ],
         "server": "direct-dns"
       },
@@ -208,8 +208,7 @@
         "rules": [
           {
             "rule_set": [
-              "!cn",
-              "gfw"
+              "proxy"
             ]
           },
           {
@@ -250,7 +249,7 @@
           {
             "match_response": true,
             "rule_set": [
-              "cn_ip"
+              "cnip"
             ]
           }
         ],
@@ -277,13 +276,6 @@
   },
   "inbounds": [
     {
-      "type": "mixed",
-      "tag": "mixed-in",
-      "listen": "::",
-      "listen_port": 7890,
-      "set_system_proxy": false
-    },
-    {
       "type": "tproxy",
       "tag": "tproxy-in",
       "listen": "::",
@@ -301,9 +293,7 @@
         "🎡 Singapore",
         "⛩️ Japan",
         "🗽 United States",
-        "🛡️ Germany",
-        "🇰🇷 Korea",
-        "🇲🇾 Malaysia",
+        "🇰🇷 Korea"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -318,9 +308,7 @@
         "🎡 Singapore",
         "⛩️ Japan",
         "🗽 United States",
-        "🛡️ Germany",
-        "🇰🇷 Korea",
-        "🇲🇾 Malaysia",
+        "🇰🇷 Korea"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -335,9 +323,7 @@
         "🎡 Singapore",
         "⛩️ Japan",
         "🗽 United States",
-        "🛡️ Germany",
-        "🇰🇷 Korea",
-        "🇲🇾 Malaysia",
+        "🇰🇷 Korea"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -352,9 +338,7 @@
         "🎡 Singapore",
         "⛩️ Japan",
         "🗽 United States",
-        "🛡️ Germany",
-        "🇰🇷 Korea",
-        "🇲🇾 Malaysia",
+        "🇰🇷 Korea"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -370,9 +354,7 @@
         "🎡 Singapore",
         "⛩️ Japan",
         "🗽 United States",
-        "🛡️ Germany",
-        "🇰🇷 Korea",
-        "🇲🇾 Malaysia",
+        "🇰🇷 Korea"
       ],
       "interrupt_exist_connections": true
     },
@@ -382,7 +364,7 @@
       "outbounds": [
         "🍹 Hong Kong",
         "🍍 Taiwan",
-        "🗽 United States",
+        "🗽 United States"
       ],
       "url": "https://cp.cloudflare.com",
       "interval": "3m0s",
@@ -441,31 +423,10 @@
       "interrupt_exist_connections": true
     },
     {
-      "tag": "🛡️ Germany",
-      "type": "urltest",
-      "use_all_providers": true,
-      "exclude": "(?i)Dedicated",
-      "include": "(?i)德国|de|germany|🇩🇪",
-      "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
-      "interrupt_exist_connections": true
-    },
-    {
       "tag": "🇰🇷 Korea",
       "type": "urltest",
       "use_all_providers": true,
       "include": "(?i)韩国|kr|korea|seoul|🇰🇷",
-      "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "🇲🇾 Malaysia",
-      "type": "urltest",
-      "use_all_providers": true,
-      "include": "(?i)马来西亚|my|malaysia|kuala lumpur|🇲🇾",
       "url": "https://cp.cloudflare.com",
       "interval": "3m0s",
       "tolerance": 50,
@@ -488,28 +449,33 @@
     "find_process": true,
     "rule_set": [
       {
-        "tag": "cn",
+        "tag": [
+          "ai",
+          "ads",
+          "cn",
+          "cnip",
+          "fakeip-filter",
+          "proxy",
+          "private",
+          "privateip"
+        ],
         "type": "remote",
         "format": "binary",
-        "path": "./rule_provider/cn.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs",
-        "http_client": "direct-client"
+        "path": "./rule_provider/{tag}.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/{tag}.srs"
       },
       {
-        "tag": "cn_ip",
+        "tag": [
+          "geosite-adobe-activation",
+          "geosite-google",
+          "geosite-youtube",
+          "geosite-category-porn",
+          "geosite-category-ads-all"
+        ],
         "type": "remote",
         "format": "binary",
-        "path": "./rule_provider/cn_ip.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "!cn",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/not_cn.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/CHIZI-0618/v2ray-rules-dat/raw/refs/heads/release/singbox_rule_set/geosite-geolocation-!cn.srs",
-        "http_client": "direct-client"
+        "path": "./rule_provider/{tag}.srs",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/{tag}.srs"
       },
       {
         "tag": "Webrtc",
@@ -521,40 +487,6 @@
         "http_client": "direct-client"
       },
       {
-        "tag": "adobe",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/adobe.srs",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/adobe.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "ai",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/ai.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "cn-ads",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/cn-ads.srs",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/Cats-Team/AdRules/main/adrules-singbox.srs",
-        "update_interval": "1d",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "category-ads-all",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-category-ads-all.srs",
-        "update_interval": "24h",
-        "path": "./rule_provider/category-ads-all.srs",
-        "http_client": "direct-client"
-      },
-      {
         "tag": "Google_FCM",
         "type": "remote",
         "format": "binary",
@@ -562,58 +494,6 @@
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/GoogleFCM/GoogleFCM.srs",
         "update_interval": "7d",
         "http_client": "direct-client"
-      },
-      {
-        "tag": "youtube",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-youtube.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "google",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "Private",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/private.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/private.srs",
-        "update_interval": "7d",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "private_ip",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://v6.gh-proxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/privateip.srs",
-        "path": "./rule_provider/private_ip.srs"
-      },
-      {
-        "tag": "gfw",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/gfw.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/gfw.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "fakeip_filter",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/fakeip_filter.srs",
-        "url": "https://v6.gh-proxy.com/https://raw.githubusercontent.com/QuixoticHeart/rule-set/ruleset/singbox/version2/fake-ip-filter.srs"
-      },
-      {
-        "tag": "pornhub",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/pornhub.srs",
-        "url": "https://v6.gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/pornhub.srs"
       }
     ],
     "rules": [
@@ -665,8 +545,8 @@
           },
           {
             "rule_set": [
-              "cn-ads",
-              "category-ads-all"
+              "ads",
+              "geosite-category-ads-all"
             ]
           }
         ],
@@ -675,7 +555,7 @@
       {
         "rule_set": [
           "Webrtc",
-          "adobe"
+          "geosite-adobe-activation"
         ],
         "action": "reject",
         "method": "default"
@@ -694,8 +574,7 @@
           },
           {
             "rule_set": [
-              "!cn",
-              "gfw"
+              "proxy"
             ]
           }
         ],
@@ -718,7 +597,7 @@
             "ip_is_private": true
           },
           {
-            "rule_set": "Private"
+            "rule_set": "private"
           }
         ],
         "outbound": "direct"
@@ -744,21 +623,20 @@
       },
       {
         "rule_set": [
-          "youtube",
-          "google"
+          "geosite-youtube",
+          "geosite-google"
         ],
         "outbound": "🧭 Google Services"
       },
       {
         "rule_set": [
-          "pornhub"
+          "geosite-category-porn"
         ],
         "outbound": "🔞 Porn"
       },
       {
         "rule_set": [
-          "!cn",
-          "gfw"
+          "proxy"
         ],
         "outbound": "📦 ALL"
       },
@@ -774,8 +652,8 @@
       },
       {
         "rule_set": [
-          "private_ip",
-          "cn_ip"
+          "privateip",
+          "cnip"
         ],
         "outbound": "direct"
       }

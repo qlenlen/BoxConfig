@@ -299,9 +299,7 @@
         "🎡 Singapore",
         "⛩️ Japan",
         "🗽 United States",
-        "🛡️ Germany",
-        "🇰🇷 Korea",
-        "🇲🇾 Malaysia"
+        "🇰🇷 Korea"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -316,9 +314,7 @@
         "🎡 Singapore",
         "⛩️ Japan",
         "🗽 United States",
-        "🛡️ Germany",
-        "🇰🇷 Korea",
-        "🇲🇾 Malaysia"
+        "🇰🇷 Korea"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -333,9 +329,7 @@
         "🎡 Singapore",
         "⛩️ Japan",
         "🗽 United States",
-        "🛡️ Germany",
-        "🇰🇷 Korea",
-        "🇲🇾 Malaysia"
+        "🇰🇷 Korea"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -350,9 +344,7 @@
         "🎡 Singapore",
         "⛩️ Japan",
         "🗽 United States",
-        "🛡️ Germany",
-        "🇰🇷 Korea",
-        "🇲🇾 Malaysia"
+        "🇰🇷 Korea"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -422,31 +414,10 @@
       "interrupt_exist_connections": true
     },
     {
-      "tag": "🛡️ Germany",
-      "type": "urltest",
-      "use_all_providers": true,
-      "exclude": "(?i)Dedicated",
-      "include": "(?i)德国|de|germany|🇩🇪",
-      "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
-      "interrupt_exist_connections": true
-    },
-    {
       "tag": "🇰🇷 Korea",
       "type": "urltest",
       "use_all_providers": true,
       "include": "(?i)韩国|kr|korea|seoul|🇰🇷",
-      "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "🇲🇾 Malaysia",
-      "type": "urltest",
-      "use_all_providers": true,
-      "include": "(?i)马来西亚|my|malaysia|kuala lumpur|🇲🇾",
       "url": "https://cp.cloudflare.com",
       "interval": "3m0s",
       "tolerance": 50,
@@ -482,6 +453,7 @@
         ],
         "type": "remote",
         "format": "binary",
+        "path": "./rule_provider/{tag}.srs",
         "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/{tag}.srs"
       },
       {
@@ -494,6 +466,7 @@
         ],
         "type": "remote",
         "format": "binary",
+        "path": "./rule_provider/{tag}.srs",
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/{tag}.srs"
       },
       {
@@ -620,16 +593,16 @@
       },
       {
         "rule_set": [
-          "proxy"
-        ],
-        "outbound": "📦 ALL"
-      },
-      {
-        "rule_set": [
           "apple-cn",
           "cn"
         ],
         "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "proxy"
+        ],
+        "outbound": "📦 ALL"
       },
       {
         "action": "resolve",
