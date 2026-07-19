@@ -173,7 +173,7 @@
           {
             "rule_set": [
               "ads",
-              "category-ads-all"
+              "geosite-category-ads-all"
             ]
           }
         ],
@@ -489,11 +489,12 @@
           "geosite-adobe-activation",
           "geosite-google",
           "geosite-youtube",
-          "geosite-category-porn"
+          "geosite-category-porn",
+          "geosite-category-ads-all"
         ],
         "type": "remote",
         "format": "binary",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/{tag}.srs"
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/{tag}.srs"
       },
       {
         "tag": "Webrtc",
@@ -502,15 +503,6 @@
         "path": "./rule_provider/Webrtc.srs",
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/Webrtc/Webrtc.srs",
         "update_interval": "7d",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "category-ads-all",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/geosite-category-ads-all.srs",
-        "update_interval": "24h",
-        "path": "./rule_provider/category-ads-all.srs",
         "http_client": "direct-client"
       }
     ],
@@ -551,7 +543,7 @@
           {
             "rule_set": [
               "ads",
-              "category-ads-all"
+              "geosite-category-ads-all"
             ]
           }
         ],
