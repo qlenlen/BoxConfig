@@ -172,7 +172,7 @@
           },
           {
             "rule_set": [
-              "cn-ads",
+              "ads",
               "category-ads-all"
             ]
           }
@@ -190,9 +190,10 @@
       },
       {
         "rule_set": [
+          "apple-cn",
           "cn",
-          "Private",
-          "fakeip_filter"
+          "private",
+          "fakeip-filter"
         ],
         "server": "direct-dns"
       },
@@ -202,8 +203,7 @@
         "rules": [
           {
             "rule_set": [
-              "!cn",
-              "gfw"
+              "proxy"
             ]
           },
           {
@@ -244,7 +244,7 @@
           {
             "match_response": true,
             "rule_set": [
-              "cn_ip"
+              "cnip"
             ]
           }
         ],
@@ -466,28 +466,20 @@
     "find_process": true,
     "rule_set": [
       {
-        "tag": "cn",
+        "tag": [
+          "ai",
+          "ads",
+          "apple-cn",
+          "cn",
+          "cnip",
+          "fakeip-filter",
+          "proxy",
+          "private",
+          "privateip"
+        ],
         "type": "remote",
         "format": "binary",
-        "path": "./rule_provider/cn.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "cn_ip",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/cn_ip.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "!cn",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/not_cn.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/CHIZI-0618/v2ray-rules-dat/raw/refs/heads/release/singbox_rule_set/geosite-geolocation-!cn.srs",
-        "http_client": "direct-client"
+        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/{tag}.srs"
       },
       {
         "tag": "Webrtc",
@@ -504,23 +496,6 @@
         "format": "binary",
         "path": "./rule_provider/adobe.srs",
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/adobe.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "ai",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/ai.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "cn-ads",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/cn-ads.srs",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/Cats-Team/AdRules/main/adrules-singbox.srs",
-        "update_interval": "1d",
         "http_client": "direct-client"
       },
       {
@@ -545,37 +520,6 @@
         "format": "binary",
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google.srs",
         "http_client": "direct-client"
-      },
-      {
-        "tag": "Private",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/private.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/private.srs",
-        "update_interval": "7d",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "private_ip",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://v6.gh-proxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/privateip.srs",
-        "path": "./rule_provider/private_ip.srs"
-      },
-      {
-        "tag": "gfw",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/gfw.srs",
-        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/gfw.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "fakeip_filter",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/fakeip_filter.srs",
-        "url": "https://v6.gh-proxy.com/https://raw.githubusercontent.com/QuixoticHeart/rule-set/ruleset/singbox/version2/fake-ip-filter.srs"
       },
       {
         "tag": "pornhub",
@@ -621,7 +565,7 @@
           },
           {
             "rule_set": [
-              "cn-ads",
+              "ads",
               "category-ads-all"
             ]
           }
@@ -650,8 +594,7 @@
           },
           {
             "rule_set": [
-              "!cn",
-              "gfw"
+              "proxy"
             ]
           }
         ],
@@ -674,7 +617,7 @@
             "ip_is_private": true
           },
           {
-            "rule_set": "Private"
+            "rule_set": "private"
           }
         ],
         "outbound": "direct"
@@ -700,13 +643,13 @@
       },
       {
         "rule_set": [
-          "!cn",
-          "gfw"
+          "proxy"
         ],
         "outbound": "📦 ALL"
       },
       {
         "rule_set": [
+          "apple-cn",
           "cn"
         ],
         "outbound": "direct"
@@ -717,8 +660,8 @@
       },
       {
         "rule_set": [
-          "private_ip",
-          "cn_ip"
+          "privateip",
+          "cnip"
         ],
         "outbound": "direct"
       }
