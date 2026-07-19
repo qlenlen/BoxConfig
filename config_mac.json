@@ -482,20 +482,23 @@
         "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/{tag}.srs"
       },
       {
+        "tag": [
+          "geosite-adobe-activation",
+          "geosite-google",
+          "geosite-youtube",
+          "geosite-category-porn"
+        ],
+        "type": "remote",
+        "format": "binary",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/{tag}.srs"
+      },
+      {
         "tag": "Webrtc",
         "type": "remote",
         "format": "binary",
         "path": "./rule_provider/Webrtc.srs",
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/Webrtc/Webrtc.srs",
         "update_interval": "7d",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "adobe",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/adobe.srs",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/adobe.srs",
         "http_client": "direct-client"
       },
       {
@@ -506,27 +509,6 @@
         "update_interval": "24h",
         "path": "./rule_provider/category-ads-all.srs",
         "http_client": "direct-client"
-      },
-      {
-        "tag": "youtube",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-youtube.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "google",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google.srs",
-        "http_client": "direct-client"
-      },
-      {
-        "tag": "pornhub",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/pornhub.srs",
-        "url": "https://v6.gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/sing/geo/geosite/pornhub.srs"
       }
     ],
     "rules": [
@@ -575,7 +557,7 @@
       {
         "rule_set": [
           "Webrtc",
-          "adobe"
+          "geosite-adobe-activation"
         ],
         "action": "reject",
         "method": "default"
@@ -630,14 +612,14 @@
       },
       {
         "rule_set": [
-          "youtube",
-          "google"
+          "geosite-youtube",
+          "geosite-google"
         ],
         "outbound": "🧭 Google Services"
       },
       {
         "rule_set": [
-          "pornhub"
+          "geosite-category-porn"
         ],
         "outbound": "🔞 Porn"
       },
