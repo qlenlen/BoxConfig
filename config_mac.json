@@ -301,7 +301,7 @@
         "🗽 United States",
         "🛡️ Germany",
         "🇰🇷 Korea",
-        "🇲🇾 Malaysia",
+        "🇲🇾 Malaysia"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -318,7 +318,7 @@
         "🗽 United States",
         "🛡️ Germany",
         "🇰🇷 Korea",
-        "🇲🇾 Malaysia",
+        "🇲🇾 Malaysia"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -335,7 +335,7 @@
         "🗽 United States",
         "🛡️ Germany",
         "🇰🇷 Korea",
-        "🇲🇾 Malaysia",
+        "🇲🇾 Malaysia"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -352,7 +352,7 @@
         "🗽 United States",
         "🛡️ Germany",
         "🇰🇷 Korea",
-        "🇲🇾 Malaysia",
+        "🇲🇾 Malaysia"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -363,7 +363,7 @@
       "outbounds": [
         "🍹 Hong Kong",
         "🍍 Taiwan",
-        "🗽 United States",
+        "🗽 United States"
       ],
       "url": "https://cp.cloudflare.com",
       "interval": "3m0s",
