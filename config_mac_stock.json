@@ -16,7 +16,6 @@
     }
   ],
   "experimental": {
-    "urltest_unified_delay": true,
     "clash_api": {
       "external_controller": "0.0.0.0:9090",
       "secret": "",
