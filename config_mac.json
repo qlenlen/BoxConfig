@@ -427,6 +427,10 @@
     {
       "type": "block",
       "tag": "block"
+    },
+    {
+      "type": "bridge",
+      "tag": "bridge-out"
     }
   ],
   "route": {
@@ -481,11 +485,25 @@
         "action": "hijack-dns"
       },
       {
+        "preferred_by": [
+          "bridge-out"
+        ],
+        "rule_set": [
+          "cnip"
+        ],
+        "action": "route",
+        "outbound": "bridge-out"
+      },
+      {
         "action": "sniff"
       },
       {
         "protocol": "dns",
         "action": "hijack-dns"
+      },
+      {
+        "network": "icmp",
+        "outbound": "direct"
       },
       {
         "type": "logical",
@@ -527,10 +545,6 @@
         ],
         "action": "reject",
         "method": "default"
-      },
-      {
-        "network": "icmp",
-        "outbound": "direct"
       },
       {
         "type": "logical",
