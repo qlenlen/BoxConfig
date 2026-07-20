@@ -21,7 +21,6 @@
       "secret": "",
       "external_ui": "dashboard",
       "external_ui_download_url": "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
-      "external_ui_http_client": "direct-client",
       "default_mode": "rule",
       "access_control_allow_origin": [
         "*"
@@ -98,24 +97,6 @@
         "detour": "📦 ALL"
       },
       {
-        "tag": "direct-dns",
-        "type": "group",
-        "servers": [
-          "ali-h3",
-          "tencent-doh",
-          "360-doh"
-        ]
-      },
-      {
-        "tag": "proxy-dns",
-        "type": "group",
-        "servers": [
-          "google-h3",
-          "cloudflare-h3",
-          "quad9-doq"
-        ]
-      },
-      {
         "type": "fakeip",
         "tag": "fakeip-dns",
         "inet4_range": "198.18.0.0/15",
@@ -149,11 +130,11 @@
       },
       {
         "clash_mode": "Direct",
-        "server": "direct-dns"
+        "server": "ali-h3"
       },
       {
         "clash_mode": "Global",
-        "server": "proxy-dns"
+        "server": "cloudflare-h3"
       },
       {
         "rule_set": [
@@ -162,7 +143,7 @@
           "private",
           "fakeip-filter"
         ],
-        "server": "direct-dns"
+        "server": "ali-h3"
       },
       {
         "type": "logical",
@@ -185,13 +166,13 @@
       },
       {
         "action": "evaluate",
-        "server": "proxy-dns"
+        "server": "cloudflare-h3"
       },
       {
         "match_response": true,
         "response_rcode": "SERVFAIL",
         "action": "route",
-        "server": "direct-dns"
+        "server": "ali-h3"
       },
       {
         "match_response": true,
@@ -216,7 +197,7 @@
           }
         ],
         "action": "route",
-        "server": "direct-dns"
+        "server": "ali-h3"
       },
       {
         "query_type": [
@@ -228,7 +209,7 @@
         "rewrite_ttl": 1
       }
     ],
-    "final": "proxy-dns",
+    "final": "cloudflare-h3",
     "strategy": "prefer_ipv4",
     "optimistic": {
       "enabled": true,
@@ -245,6 +226,11 @@
         "fdfe:dcba:9876::1/126"
       ],
       "mtu": 9000,
+      "dns_mode": "hijack",
+      "dns_address": [
+        "172.18.0.2",
+        "fdfe:dcba:9876::2"
+      ],
       "auto_route": true,
       "strict_route": true,
       "endpoint_independent_nat": false,
@@ -261,8 +247,7 @@
         "🍍 Taiwan",
         "🎡 Singapore",
         "⛩️ Japan",
-        "🗽 United States",
-        "🇰🇷 Korea"
+        "🗽 United States"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -276,8 +261,7 @@
         "🍍 Taiwan",
         "🎡 Singapore",
         "⛩️ Japan",
-        "🗽 United States",
-        "🇰🇷 Korea"
+        "🗽 United States"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -291,8 +275,7 @@
         "🍍 Taiwan",
         "🎡 Singapore",
         "⛩️ Japan",
-        "🗽 United States",
-        "🇰🇷 Korea"
+        "🗽 United States"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -306,8 +289,7 @@
         "🍍 Taiwan",
         "🎡 Singapore",
         "⛩️ Japan",
-        "🗽 United States",
-        "🇰🇷 Korea"
+        "🗽 United States"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -321,79 +303,47 @@
         "🗽 United States"
       ],
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "idle_timeout": "30m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
       "tag": "🍹 Hong Kong",
+      "outbounds": [],
       "type": "urltest",
-      "use_all_providers": true,
-      "include": "(?i)香港|hk|hongkong|🇭🇰",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
       "tag": "🍍 Taiwan",
+      "outbounds": [],
       "type": "urltest",
-      "use_all_providers": true,
-      "include": "(?i)台湾|tw|taiwan|taipei|🇹🇼",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
       "tag": "🎡 Singapore",
+      "outbounds": [],
       "type": "urltest",
-      "use_all_providers": true,
-      "include": "(?i)新加坡|sg|singapore|狮城|🇸🇬",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
       "tag": "⛩️ Japan",
+      "outbounds": [],
       "type": "urltest",
-      "use_all_providers": true,
-      "include": "(?i)日本|jp|japan|tokyo|osaka|东京|🇯🇵",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
       "tag": "🗽 United States",
+      "outbounds": [],
       "type": "urltest",
-      "use_all_providers": true,
-      "include": "(?i)美国|us|united states|america|los angeles|san jose|silicon valley|🇺🇸",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "🇰🇷 Korea",
-      "type": "urltest",
-      "use_all_providers": true,
-      "include": "(?i)韩国|kr|korea|seoul|🇰🇷",
-      "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
       "tag": "direct",
       "type": "direct",
-      "domain_resolver": "direct-dns"
-    },
-    {
-      "type": "block",
-      "tag": "block"
+      "domain_resolver": "ali-h3"
     },
     {
       "type": "bridge",
@@ -401,9 +351,10 @@
     }
   ],
   "route": {
-    "default_domain_resolver": "direct-dns",
+    "default_domain_resolver": "ali-h3",
     "final": "📦 ALL",
     "auto_detect_interface": true,
+    "default_http_client": "direct-client",
     "find_process": true,
     "rule_set": [
       {
@@ -420,7 +371,6 @@
         ],
         "type": "remote",
         "format": "binary",
-        "path": "./rule_provider/{tag}.srs",
         "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/{tag}.srs"
       },
       {
@@ -433,24 +383,18 @@
         ],
         "type": "remote",
         "format": "binary",
-        "path": "./rule_provider/{tag}.srs",
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/{tag}.srs"
       },
       {
         "tag": "Webrtc",
         "type": "remote",
         "format": "binary",
-        "path": "./rule_provider/Webrtc.srs",
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/Webrtc/Webrtc.srs",
         "update_interval": "7d",
         "http_client": "direct-client"
       }
     ],
     "rules": [
-      {
-        "port": 53,
-        "action": "hijack-dns"
-      },
       {
         "preferred_by": [
           "bridge-out"
@@ -584,8 +528,7 @@
         "outbound": "📦 ALL"
       },
       {
-        "action": "resolve",
-        "match_only": true
+        "action": "resolve"
       },
       {
         "rule_set": [
