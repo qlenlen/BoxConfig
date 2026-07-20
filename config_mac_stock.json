@@ -50,10 +50,14 @@
             "9.9.9.9"
           ],
           "doh.pub": [
-            "1.12.12.12",
+            "1.12.12.21",
             "120.53.53.53"
           ]
         }
+      },
+      {
+        "type": "local",
+        "tag": "local-dns"
       },
       {
         "type": "h3",
@@ -130,7 +134,7 @@
       },
       {
         "clash_mode": "Direct",
-        "server": "ali-h3"
+        "server": "local-dns"
       },
       {
         "clash_mode": "Global",
@@ -143,7 +147,7 @@
           "private",
           "fakeip-filter"
         ],
-        "server": "ali-h3"
+        "server": "local-dns"
       },
       {
         "type": "logical",
@@ -172,7 +176,7 @@
         "match_response": true,
         "response_rcode": "SERVFAIL",
         "action": "route",
-        "server": "ali-h3"
+        "server": "local-dns"
       },
       {
         "match_response": true,
@@ -197,7 +201,7 @@
           }
         ],
         "action": "route",
-        "server": "ali-h3"
+        "server": "local-dns"
       },
       {
         "query_type": [
@@ -343,7 +347,7 @@
     {
       "tag": "direct",
       "type": "direct",
-      "domain_resolver": "ali-h3"
+      "domain_resolver": "local-dns"
     },
     {
       "type": "bridge",
@@ -351,7 +355,7 @@
     }
   ],
   "route": {
-    "default_domain_resolver": "ali-h3",
+    "default_domain_resolver": "local-dns",
     "final": "📦 ALL",
     "auto_detect_interface": true,
     "default_http_client": "direct-client",
