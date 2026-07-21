@@ -251,7 +251,8 @@
         "🍍 Taiwan",
         "🎡 Singapore",
         "⛩️ Japan",
-        "🗽 United States"
+        "🗽 United States",
+        "👌 优选"
       ],
       "default": "🚀 Auto",
       "interrupt_exist_connections": true
@@ -304,8 +305,17 @@
       "outbounds": [
         "🍹 Hong Kong",
         "🍍 Taiwan",
-        "🗽 United States"
+        "🗽 United States",
+        "👌 优选"
       ],
+      "url": "https://cp.cloudflare.com",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "👌 优选",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)优选",
       "url": "https://cp.cloudflare.com",
       "interrupt_exist_connections": true
     },
