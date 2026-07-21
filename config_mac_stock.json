@@ -314,7 +314,6 @@
     {
       "tag": "👌 优选",
       "type": "urltest",
-      "use_all_providers": true,
       "include": "(?i)优选",
       "url": "https://cp.cloudflare.com",
       "interrupt_exist_connections": true
