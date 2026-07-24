@@ -50,8 +50,12 @@
             "9.9.9.9"
           ],
           "doh.pub": [
-            "1.12.12.21",
+            "1.12.12.12",
             "120.53.53.53"
+          ],
+          "cloudflare-dns.com": [
+            "104.16.248.249",
+            "104.16.249.249"
           ]
         }
       },
@@ -74,14 +78,12 @@
         "type": "https",
         "tag": "360-doh",
         "server": "doh.360.cn",
-        "path": "/dns-query",
         "domain_resolver": "ali-h3"
       },
       {
         "type": "h3",
         "tag": "google-h3",
         "server": "dns.google",
-        "path": "/dns-query",
         "domain_resolver": "dns_hosts",
         "detour": "📦 ALL"
       },
@@ -89,8 +91,7 @@
         "type": "h3",
         "tag": "cloudflare-h3",
         "server": "cloudflare-dns.com",
-        "path": "/dns-query",
-        "domain_resolver": "google-h3",
+        "domain_resolver": "dns_hosts",
         "detour": "📦 ALL"
       },
       {
@@ -138,16 +139,59 @@
       },
       {
         "clash_mode": "Global",
-        "server": "cloudflare-h3"
+        "server": "fakeip-dns"
       },
       {
         "rule_set": [
-          "apple-cn",
-          "cn",
           "private",
           "fakeip-filter"
         ],
         "server": "local-dns"
+      },
+      {
+        "rule_set": [
+          "apple-cn",
+          "cn"
+        ],
+        "action": "evaluate",
+        "server": "ali-h3",
+        "tag": "ali-evaluate"
+      },
+      {
+        "rule_set": [
+          "apple-cn",
+          "cn"
+        ],
+        "action": "evaluate",
+        "server": "tencent-doh",
+        "tag": "tencent-evaluate"
+      },
+      {
+        "rule_set": [
+          "apple-cn",
+          "cn"
+        ],
+        "action": "evaluate",
+        "server": "360-doh",
+        "tag": "360-evaluate"
+      },
+      {
+        "match_response": "ali-evaluate",
+        "response_rcode": "NOERROR",
+        "action": "respond",
+        "race": true
+      },
+      {
+        "match_response": "tencent-evaluate",
+        "response_rcode": "NOERROR",
+        "action": "respond",
+        "race": true
+      },
+      {
+        "match_response": "360-evaluate",
+        "response_rcode": "NOERROR",
+        "action": "respond",
+        "race": true
       },
       {
         "type": "logical",
@@ -155,7 +199,7 @@
         "rules": [
           {
             "rule_set": [
-              "proxy"
+              "gfw"
             ]
           },
           {
@@ -169,51 +213,67 @@
         "rewrite_ttl": 1
       },
       {
-        "action": "evaluate",
-        "server": "cloudflare-h3"
-      },
-      {
-        "match_response": true,
-        "response_rcode": "SERVFAIL",
-        "action": "route",
-        "server": "local-dns"
-      },
-      {
-        "match_response": true,
-        "response_rcode": "NOERROR",
-        "ip_accept_any": true,
+        "rule_set": "gfw",
         "invert": true,
-        "action": "respond"
+        "action": "evaluate",
+        "server": "cloudflare-h3",
+        "tag": "cloudflare-evaluate"
       },
       {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "match_response": true,
-            "ip_is_private": true
-          },
-          {
-            "match_response": true,
-            "rule_set": [
-              "cnip"
-            ]
-          }
-        ],
-        "action": "route",
-        "server": "local-dns"
+        "rule_set": "gfw",
+        "invert": true,
+        "action": "evaluate",
+        "server": "google-h3",
+        "tag": "google-evaluate"
       },
       {
-        "query_type": [
-          "A",
-          "AAAA"
-        ],
+        "rule_set": "gfw",
+        "invert": true,
+        "action": "evaluate",
+        "server": "quad9-doq",
+        "tag": "quad9-evaluate"
+      },
+      {
+        "match_response": "cloudflare-evaluate",
+        "rule_set": "cnip",
         "action": "route",
-        "server": "fakeip-dns",
-        "rewrite_ttl": 1
+        "server": "ali-h3",
+        "race": true
+      },
+      {
+        "match_response": "google-evaluate",
+        "rule_set": "cnip",
+        "action": "route",
+        "server": "ali-h3",
+        "race": true
+      },
+      {
+        "match_response": "quad9-evaluate",
+        "rule_set": "cnip",
+        "action": "route",
+        "server": "ali-h3",
+        "race": true
+      },
+      {
+        "match_response": "cloudflare-evaluate",
+        "response_rcode": "NOERROR",
+        "action": "respond",
+        "race": true
+      },
+      {
+        "match_response": "google-evaluate",
+        "response_rcode": "NOERROR",
+        "action": "respond",
+        "race": true
+      },
+      {
+        "match_response": "quad9-evaluate",
+        "response_rcode": "NOERROR",
+        "action": "respond",
+        "race": true
       }
     ],
-    "final": "cloudflare-h3",
+    "final": "local-dns",
     "strategy": "prefer_ipv4",
     "optimistic": {
       "enabled": true,
@@ -377,6 +437,7 @@
           "cn",
           "cnip",
           "fakeip-filter",
+          "gfw",
           "proxy",
           "private",
           "privateip"
