@@ -534,23 +534,6 @@
         "method": "default"
       },
       {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "network": "udp",
-            "port": 443
-          },
-          {
-            "rule_set": [
-              "proxy"
-            ]
-          }
-        ],
-        "action": "reject",
-        "method": "default"
-      },
-      {
         "clash_mode": "Global",
         "outbound": "📦 ALL"
       },
