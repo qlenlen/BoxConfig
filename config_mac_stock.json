@@ -152,6 +152,10 @@
         "server": "local-dns"
       },
       {
+        "domain_suffix": "cdn.jsdelivr.net",
+        "server": "local-dns"
+      },
+      {
         "rule_set": [
           "apple-cn",
           "cn"
