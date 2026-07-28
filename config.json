@@ -114,22 +114,22 @@
         "domain_resolver": "ali-h3"
       },
       {
-        "type": "h3",
-        "tag": "google-h3",
+        "type": "https",
+        "tag": "google-doh",
         "server": "dns.google",
         "domain_resolver": "dns_hosts",
         "detour": "📦 ALL"
       },
       {
-        "type": "h3",
-        "tag": "cloudflare-h3",
+        "type": "https",
+        "tag": "cloudflare-doh",
         "server": "cloudflare-dns.com",
         "domain_resolver": "dns_hosts",
         "detour": "📦 ALL"
       },
       {
-        "tag": "quad9-doq",
-        "type": "quic",
+        "tag": "quad9-doh",
+        "type": "https",
         "server": "dns.quad9.net",
         "domain_resolver": "dns_hosts",
         "detour": "📦 ALL"
@@ -147,9 +147,9 @@
         "tag": "proxy-dns",
         "type": "group",
         "servers": [
-          "google-h3",
-          "cloudflare-h3",
-          "quad9-doq"
+          "google-doh",
+          "cloudflare-doh",
+          "quad9-doh"
         ]
       },
       {
@@ -164,7 +164,7 @@
         "rule_set": [
           "Google_FCM"
         ],
-        "server": "google-h3"
+        "server": "google-doh"
       },
       {
         "clash_mode": "Direct",
@@ -526,6 +526,39 @@
       {
         "network": "icmp",
         "outbound": "direct"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "network": "udp",
+            "port": 443
+          },
+          {
+            "rule_set": [
+              "proxy"
+            ]
+          }
+        ],
+        "action": "reject",
+        "method": "default"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "ip_version": 6
+          },
+          {
+            "default_interface_address": [
+              "2000::/3"
+            ],
+            "invert": true
+          }
+        ],
+        "action": "reject"
       },
       {
         "clash_mode": "Global",
