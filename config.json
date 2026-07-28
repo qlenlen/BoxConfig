@@ -90,13 +90,16 @@
         }
       },
       {
-        "type": "local",
-        "tag": "local-dns"
+        "type": "udp",
+        "tag": "smart-dns",
+        "server": "127.0.0.1",
+        "server_port": 1451
       },
       {
         "type": "h3",
         "tag": "ali-h3",
-        "server": "223.5.5.5"
+        "server": "dns.alidns.com",
+        "domain_resolver": "dns_hosts"
       },
       {
         "type": "https",
@@ -203,14 +206,9 @@
       },
       {
         "rule_set": [
+          "cn",
           "private",
           "fakeip-filter"
-        ],
-        "server": "local-dns"
-      },
-      {
-        "rule_set": [
-          "cn"
         ],
         "server": "direct-dns"
       },
@@ -234,22 +232,26 @@
         "rewrite_ttl": 1
       },
       {
-        "rule_set": [
-          "proxy"
-        ],
+        "rule_set": "gfw",
         "invert": true,
         "action": "evaluate",
         "server": "proxy-dns"
       },
       {
-        "match_response": true,
-        "ip_is_private": true,
-        "action": "route",
-        "server": "local-dns"
-      },
-      {
-        "match_response": true,
-        "rule_set": "cnip",
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "match_response": true,
+            "ip_is_private": true
+          },
+          {
+            "match_response": true,
+            "rule_set": [
+              "cnip"
+            ]
+          }
+        ],
         "action": "route",
         "server": "direct-dns"
       },
@@ -257,9 +259,18 @@
         "match_response": true,
         "response_rcode": "NOERROR",
         "action": "respond"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "route",
+        "server": "fakeip-dns",
+        "rewrite_ttl": 1
       }
     ],
-    "final": "local-dns",
+    "final": "proxy-dns",
     "strategy": "prefer_ipv4",
     "optimistic": {
       "enabled": true,
@@ -354,6 +365,7 @@
         "🗽 United States"
       ],
       "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
       "interrupt_exist_connections": true
     },
     {
@@ -407,7 +419,7 @@
     {
       "tag": "direct",
       "type": "direct",
-      "domain_resolver": "local-dns"
+      "domain_resolver": "direct-dns"
     },
     {
       "type": "block",
@@ -427,6 +439,7 @@
           "cn",
           "cnip",
           "fakeip-filter",
+          "gfw",
           "proxy",
           "private",
           "privateip"
@@ -486,10 +499,6 @@
         "action": "hijack-dns"
       },
       {
-        "network": "icmp",
-        "outbound": "direct"
-      },
-      {
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -513,6 +522,10 @@
         ],
         "action": "reject",
         "method": "default"
+      },
+      {
+        "network": "icmp",
+        "outbound": "direct"
       },
       {
         "clash_mode": "Global",
