@@ -366,16 +366,17 @@
       "type": "urltest",
       "tag": "🚀 Auto",
       "outbounds": [
-        "🍹 Hong Kong",
         "🍍 Taiwan",
         "🗽 United States",
-        "👌 优选"
+        "👌 优选",
+        "🍹 Hong Kong"
       ],
       "url": "https://cp.cloudflare.com",
       "interrupt_exist_connections": true
     },
     {
       "tag": "👌 优选",
+      "outbounds": [],
       "type": "urltest",
       "url": "https://cp.cloudflare.com",
       "interrupt_exist_connections": true
