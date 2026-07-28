@@ -269,7 +269,7 @@
         "rewrite_ttl": 1
       }
     ],
-    "final": "proxy-dns",
+    "final": "local-dns",
     "strategy": "prefer_ipv4",
     "optimistic": {
       "enabled": true,
@@ -430,7 +430,7 @@
     {
       "tag": "direct",
       "type": "direct",
-      "domain_resolver": "direct-dns"
+      "domain_resolver": "local-dns"
     },
     {
       "type": "block",

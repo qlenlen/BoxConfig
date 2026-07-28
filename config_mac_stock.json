@@ -119,6 +119,12 @@
         "action": "reject"
       },
       {
+        "query_type": [
+          "PTR"
+        ],
+        "action": "reject"
+      },
+      {
         "type": "logical",
         "mode": "and",
         "rules": [
