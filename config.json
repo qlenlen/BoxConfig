@@ -234,6 +234,10 @@
         "rewrite_ttl": 1
       },
       {
+        "rule_set": [
+          "proxy"
+        ],
+        "invert": true,
         "action": "evaluate",
         "server": "proxy-dns"
       },
@@ -245,9 +249,7 @@
       },
       {
         "match_response": true,
-        "rule_set": [
-          "cnip"
-        ],
+        "rule_set": "cnip",
         "action": "route",
         "server": "direct-dns"
       },
@@ -425,7 +427,6 @@
           "cn",
           "cnip",
           "fakeip-filter",
-          "gfw",
           "proxy",
           "private",
           "privateip"
