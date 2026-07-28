@@ -1,8 +1,6 @@
 {
   "log": {
-    "disabled": false,
-    "level": "error",
-    "output": "./sing-box.log",
+    "level": "fatal",
     "timestamp": true
   },
   "http_clients": [
@@ -80,6 +78,10 @@
           "doh.pub": [
             "1.12.12.21",
             "120.53.53.53"
+          ],
+          "cloudflare-dns.com": [
+            "104.16.248.249",
+            "104.16.249.249"
           ]
         }
       },
@@ -179,6 +181,12 @@
         ],
         "action": "reject",
         "method": "drop"
+      },
+      {
+        "query_type": [
+          "PTR"
+        ],
+        "action": "reject"
       },
       {
         "clash_mode": "Direct",
