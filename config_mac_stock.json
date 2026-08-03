@@ -454,7 +454,8 @@
           "gfw",
           "proxy",
           "private",
-          "privateip"
+          "privateip",
+          "telegramip"
         ],
         "type": "remote",
         "format": "binary",
@@ -483,6 +484,10 @@
     ],
     "rules": [
       {
+        "port": 53,
+        "action": "hijack-dns"
+      },
+      {
         "preferred_by": [
           "bridge-out"
         ],
@@ -493,7 +498,10 @@
         "outbound": "bridge-out"
       },
       {
-        "action": "sniff"
+        "rule_set": "telegramip",
+        "invert": true,
+        "action": "sniff",
+        "timeout": "300s"
       },
       {
         "protocol": "dns",

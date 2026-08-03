@@ -457,7 +457,8 @@
           "fakeip-filter",
           "proxy",
           "private",
-          "privateip"
+          "privateip",
+          "telegramip"
         ],
         "type": "remote",
         "format": "binary",
@@ -503,7 +504,10 @@
         "outbound": "bridge-out"
       },
       {
-        "action": "sniff"
+        "rule_set": "telegramip",
+        "invert": true,
+        "action": "sniff",
+        "timeout": "300s"
       },
       {
         "protocol": "dns",
