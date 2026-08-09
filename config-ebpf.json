@@ -372,7 +372,10 @@
       "outbounds": [
         "🍹 Hong Kong",
         "🍍 Taiwan",
-        "🗽 United States"
+        "🗽 United States",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🇰🇷 Korea"
       ],
       "url": "https://cp.cloudflare.com",
       "interval": "3m0s",
