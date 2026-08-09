@@ -8,17 +8,13 @@
     {
       "tag": "direct-client",
       "detour": "direct"
-    },
-    {
-      "tag": "proxy-client",
-      "detour": "📦 ALL"
     }
   ],
   "providers": [
     {
       "tag": "A",
       "type": "remote",
-      "url": "http://127.0.0.1:3000/download/bp?target=sing-box",
+      "url": "http://127.0.0.1:3000/download/cx?target=sing-box",
       "http_client": "direct-client",
       "update_interval": "24h0m0s",
       "path": "./providers/A.json"
@@ -30,6 +26,14 @@
       "http_client": "direct-client",
       "update_interval": "24h0m0s",
       "path": "./providers/B.json"
+    },
+    {
+      "tag": "C",
+      "type": "remote",
+      "url": "http://127.0.0.1:3000/download/bp?target=sing-box",
+      "http_client": "direct-client",
+      "update_interval": "24h0m0s",
+      "path": "./providers/C.json"
     },
     {
       "tag": "D",
@@ -197,7 +201,7 @@
           {
             "rule_set": [
               "ads",
-              "geosite-category-ads-all"
+              "geosite-category-ads"
             ]
           }
         ],
@@ -280,10 +284,15 @@
   },
   "inbounds": [
     {
-      "type": "tproxy",
-      "tag": "tproxy-in",
-      "listen": "::",
-      "listen_port": 9898
+      "type": "ebpf",
+      "redirect_address": [
+        "127.128.0.0/9",
+        "fd53:696e:672d:626f::/64"
+      ],
+      "bypass_rule_set": [
+        "cnip"
+      ],
+      "dns_mode": "hijack"
     }
   ],
   "outbounds": [
@@ -345,15 +354,6 @@
         "🇰🇷 Korea"
       ],
       "default": "🚀 Auto",
-      "interrupt_exist_connections": true
-    },
-    {
-      "tag": "🔔 Google FCM",
-      "type": "selector",
-      "outbounds": [
-        "direct",
-        "🚀 Auto"
-      ],
       "interrupt_exist_connections": true
     },
     {
@@ -442,7 +442,8 @@
           "gfw",
           "proxy",
           "private",
-          "privateip"
+          "privateip",
+          "telegramip"
         ],
         "type": "remote",
         "format": "binary",
@@ -454,8 +455,9 @@
           "geosite-adobe-activation",
           "geosite-google",
           "geosite-youtube",
+          "geosite-category-ai-cn",
           "geosite-category-porn",
-          "geosite-category-ads-all"
+          "geosite-category-ads"
         ],
         "type": "remote",
         "format": "binary",
@@ -483,7 +485,10 @@
     ],
     "rules": [
       {
-        "action": "sniff"
+        "rule_set": "telegramip",
+        "invert": true,
+        "action": "sniff",
+        "timeout": "300ms"
       },
       {
         "type": "logical",
@@ -509,7 +514,7 @@
           {
             "rule_set": [
               "ads",
-              "geosite-category-ads-all"
+              "geosite-category-ads"
             ]
           }
         ],
@@ -582,12 +587,6 @@
         "outbound": "direct"
       },
       {
-        "rule_set": [
-          "ai"
-        ],
-        "outbound": "🃏 AI"
-      },
-      {
         "type": "logical",
         "mode": "or",
         "rules": [
@@ -598,7 +597,20 @@
             "port": 5228
           }
         ],
-        "outbound": "🔔 Google FCM"
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "cn",
+          "geosite-category-ai-cn"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "ai"
+        ],
+        "outbound": "🃏 AI"
       },
       {
         "rule_set": [
@@ -618,12 +630,6 @@
           "proxy"
         ],
         "outbound": "📦 ALL"
-      },
-      {
-        "rule_set": [
-          "cn"
-        ],
-        "outbound": "direct"
       },
       {
         "action": "resolve",
