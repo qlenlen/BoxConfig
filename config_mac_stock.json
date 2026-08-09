@@ -320,6 +320,8 @@
         "🍍 Taiwan",
         "🎡 Singapore",
         "⛩️ Japan",
+        "🇰🇷 South Korea",
+        "🇩🇪 Germany",
         "🗽 United States"
       ],
       "default": "🚀 Auto",
@@ -334,6 +336,8 @@
         "🍍 Taiwan",
         "🎡 Singapore",
         "⛩️ Japan",
+        "🇰🇷 South Korea",
+        "🇩🇪 Germany",
         "🗽 United States"
       ],
       "default": "🚀 Auto",
@@ -344,10 +348,10 @@
       "type": "selector",
       "outbounds": [
         "🚀 Auto",
-        "🍹 Hong Kong",
-        "🍍 Taiwan",
         "🎡 Singapore",
         "⛩️ Japan",
+        "🇰🇷 South Korea",
+        "🇩🇪 Germany",
         "🗽 United States"
       ],
       "default": "🚀 Auto",
@@ -362,6 +366,8 @@
         "🍍 Taiwan",
         "🎡 Singapore",
         "⛩️ Japan",
+        "🇰🇷 South Korea",
+        "🇩🇪 Germany",
         "🗽 United States"
       ],
       "default": "🚀 Auto",
@@ -372,8 +378,12 @@
       "tag": "🚀 Auto",
       "outbounds": [
         "🍍 Taiwan",
+        "⛩️ Japan",
         "🗽 United States",
-        "🍹 Hong Kong"
+        "🍹 Hong Kong",
+        "🎡 Singapore",
+        "🇩🇪 Germany",
+        "🇰🇷 South Korea"
       ],
       "url": "https://cp.cloudflare.com",
       "interrupt_exist_connections": true
@@ -401,6 +411,20 @@
     },
     {
       "tag": "⛩️ Japan",
+      "outbounds": [],
+      "type": "urltest",
+      "url": "https://cp.cloudflare.com",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🇰🇷 South Korea",
+      "outbounds": [],
+      "type": "urltest",
+      "url": "https://cp.cloudflare.com",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🇩🇪 Germany",
       "outbounds": [],
       "type": "urltest",
       "url": "https://cp.cloudflare.com",
