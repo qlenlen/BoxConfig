@@ -335,7 +335,7 @@
         "🗽 United States"
       ],
       "default": "🚀 Auto",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "🃏 AI",
@@ -351,7 +351,7 @@
         "🗽 United States"
       ],
       "default": "🚀 Auto",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "🔞 Porn",
@@ -365,7 +365,7 @@
         "🗽 United States"
       ],
       "default": "🚀 Auto",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "🧭 Google Services",
@@ -381,7 +381,7 @@
         "🗽 United States"
       ],
       "default": "🚀 Auto",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "type": "urltest",
@@ -396,56 +396,56 @@
         "🇰🇷 South Korea"
       ],
       "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "🍹 Hong Kong",
       "outbounds": [],
       "type": "urltest",
       "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "🍍 Taiwan",
       "outbounds": [],
       "type": "urltest",
       "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "🎡 Singapore",
       "outbounds": [],
       "type": "urltest",
       "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "⛩️ Japan",
       "outbounds": [],
       "type": "urltest",
       "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "🇰🇷 South Korea",
       "outbounds": [],
       "type": "urltest",
       "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "🇩🇪 Germany",
       "outbounds": [],
       "type": "urltest",
       "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "🗽 United States",
       "outbounds": [],
       "type": "urltest",
       "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "interrupt_exist_connections": false
     },
     {
       "tag": "direct",

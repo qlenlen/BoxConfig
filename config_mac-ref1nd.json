@@ -7,17 +7,13 @@
     {
       "tag": "direct-client",
       "detour": "direct"
-    },
-    {
-      "tag": "proxy-client",
-      "detour": "📦 ALL"
     }
   ],
   "providers": [
     {
       "tag": "A",
       "type": "remote",
-      "url": "http://127.0.0.1:3000/download/bp?target=sing-box",
+      "url": "http://127.0.0.1:3000/download/cx?target=sing-box",
       "http_client": "direct-client",
       "update_interval": "24h0m0s",
       "path": "./providers/A.json"
@@ -29,6 +25,14 @@
       "http_client": "direct-client",
       "update_interval": "24h0m0s",
       "path": "./providers/B.json"
+    },
+    {
+      "tag": "C",
+      "type": "remote",
+      "url": "http://127.0.0.1:3000/download/bp?target=sing-box",
+      "http_client": "direct-client",
+      "update_interval": "24h0m0s",
+      "path": "./providers/C.json"
     },
     {
       "tag": "D",
@@ -56,7 +60,6 @@
     "cache_file": {
       "enabled": true,
       "path": "./cache.db",
-      "cache_id": "v3",
       "store_fakeip": true,
       "store_dns": true
     }
@@ -78,7 +81,7 @@
             "9.9.9.9"
           ],
           "doh.pub": [
-            "1.12.12.21",
+            "1.12.12.12",
             "120.53.53.53"
           ],
           "cloudflare-dns.com": [
@@ -117,28 +120,25 @@
         "type": "https",
         "tag": "360-doh",
         "server": "doh.360.cn",
-        "path": "/dns-query",
         "domain_resolver": "ali-h3"
       },
       {
-        "type": "h3",
-        "tag": "google-h3",
+        "type": "https",
+        "tag": "google-doh",
         "server": "dns.google",
-        "path": "/dns-query",
         "domain_resolver": "dns_hosts",
         "detour": "📦 ALL"
       },
       {
-        "type": "h3",
-        "tag": "cloudflare-h3",
+        "type": "https",
+        "tag": "cloudflare-doh",
         "server": "cloudflare-dns.com",
-        "path": "/dns-query",
-        "domain_resolver": "google-h3",
+        "domain_resolver": "dns_hosts",
         "detour": "📦 ALL"
       },
       {
-        "tag": "quad9-doq",
-        "type": "quic",
+        "tag": "quad9-doh",
+        "type": "https",
         "server": "dns.quad9.net",
         "domain_resolver": "dns_hosts",
         "detour": "📦 ALL"
@@ -156,16 +156,16 @@
         "tag": "proxy-dns",
         "type": "group",
         "servers": [
-          "google-h3",
-          "cloudflare-h3",
-          "quad9-doq"
+          "google-doh",
+          "cloudflare-doh",
+          "quad9-doh"
         ]
       },
       {
         "type": "fakeip",
         "tag": "fakeip-dns",
         "inet4_range": "198.18.0.0/15",
-        "inet6_range": "fc00::/18"
+        "inet6_range": "2001:db8:ca0b::/48"
       }
     ],
     "rules": [
@@ -174,10 +174,51 @@
         "server": "dns_hosts"
       },
       {
+        "clash_mode": "Direct",
+        "server": "direct-dns"
+      },
+      {
+        "clash_mode": "Global",
+        "server": "proxy-dns"
+      },
+      {
         "rule_set": [
           "Webrtc"
         ],
         "action": "reject"
+      },
+      {
+        "query_type": [
+          "PTR"
+        ],
+        "action": "reject"
+      },
+      {
+        "query_type": [
+          "SVCB",
+          "HTTPS"
+        ],
+        "match_response": true,
+        "action": "predefined",
+        "rcode": "NOTIMP"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "query_type": "AAAA"
+          },
+          {
+            "default_interface_address": [
+              "2000::/4"
+            ],
+            "invert": true
+          }
+        ],
+        "action": "reject",
+        "method": "default",
+        "no_drop": true
       },
       {
         "type": "logical",
@@ -190,7 +231,7 @@
           {
             "rule_set": [
               "ads",
-              "geosite-category-ads-all"
+              "geosite-category-ads"
             ]
           }
         ],
@@ -198,22 +239,7 @@
         "method": "drop"
       },
       {
-        "query_type": [
-          "PTR"
-        ],
-        "action": "reject"
-      },
-      {
-        "clash_mode": "Direct",
-        "server": "direct-dns"
-      },
-      {
-        "clash_mode": "Global",
-        "server": "proxy-dns"
-      },
-      {
         "rule_set": [
-          "apple-cn",
           "cn",
           "private",
           "fakeip-filter"
@@ -240,21 +266,10 @@
         "rewrite_ttl": 1
       },
       {
+        "rule_set": "gfw",
+        "invert": true,
         "action": "evaluate",
         "server": "proxy-dns"
-      },
-      {
-        "match_response": true,
-        "response_rcode": "SERVFAIL",
-        "action": "route",
-        "server": "direct-dns"
-      },
-      {
-        "match_response": true,
-        "response_rcode": "NOERROR",
-        "ip_accept_any": true,
-        "invert": true,
-        "action": "respond"
       },
       {
         "type": "logical",
@@ -275,6 +290,11 @@
         "server": "direct-dns"
       },
       {
+        "match_response": true,
+        "response_rcode": "NOERROR",
+        "action": "respond"
+      },
+      {
         "query_type": [
           "A",
           "AAAA"
@@ -288,7 +308,7 @@
     "strategy": "prefer_ipv4",
     "optimistic": {
       "enabled": true,
-      "timeout": "48h0m0s"
+      "timeout": "72h0m0s"
     },
     "reverse_mapping": true
   },
@@ -374,12 +394,13 @@
       "outbounds": [
         "🍹 Hong Kong",
         "🍍 Taiwan",
-        "🗽 United States"
+        "🗽 United States",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🇰🇷 Korea"
       ],
       "url": "https://cp.cloudflare.com",
       "interval": "3m0s",
-      "idle_timeout": "30m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
@@ -388,8 +409,6 @@
       "use_all_providers": true,
       "include": "(?i)香港|hk|hongkong|🇭🇰",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
@@ -398,8 +417,6 @@
       "use_all_providers": true,
       "include": "(?i)台湾|tw|taiwan|taipei|🇹🇼",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
@@ -408,8 +425,6 @@
       "use_all_providers": true,
       "include": "(?i)新加坡|sg|singapore|狮城|🇸🇬",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
@@ -418,8 +433,6 @@
       "use_all_providers": true,
       "include": "(?i)日本|jp|japan|tokyo|osaka|东京|🇯🇵",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
@@ -428,8 +441,6 @@
       "use_all_providers": true,
       "include": "(?i)美国|us|united states|america|los angeles|san jose|silicon valley|🇺🇸",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
@@ -438,22 +449,16 @@
       "use_all_providers": true,
       "include": "(?i)韩国|kr|korea|seoul|🇰🇷",
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "tolerance": 50,
       "interrupt_exist_connections": true
     },
     {
       "tag": "direct",
       "type": "direct",
-      "domain_resolver": "local-dns"
+      "domain_resolver": "direct-dns"
     },
     {
       "type": "block",
       "tag": "block"
-    },
-    {
-      "type": "bridge",
-      "tag": "bridge-out"
     }
   ],
   "route": {
@@ -466,10 +471,10 @@
         "tag": [
           "ai",
           "ads",
-          "apple-cn",
           "cn",
           "cnip",
           "fakeip-filter",
+          "gfw",
           "proxy",
           "private",
           "privateip",
@@ -485,8 +490,9 @@
           "geosite-adobe-activation",
           "geosite-google",
           "geosite-youtube",
+          "geosite-category-ai-cn",
           "geosite-category-porn",
-          "geosite-category-ads-all"
+          "geosite-category-ads"
         ],
         "type": "remote",
         "format": "binary",
@@ -509,44 +515,14 @@
         "action": "hijack-dns"
       },
       {
-        "preferred_by": [
-          "bridge-out"
-        ],
-        "rule_set": [
-          "cnip"
-        ],
-        "action": "route",
-        "outbound": "bridge-out"
-      },
-      {
         "rule_set": "telegramip",
         "invert": true,
         "action": "sniff",
-        "timeout": "300s"
+        "timeout": "300ms"
       },
       {
         "protocol": "dns",
         "action": "hijack-dns"
-      },
-      {
-        "network": "icmp",
-        "outbound": "direct"
-      },
-      {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "ip_version": 6
-          },
-          {
-            "default_interface_address": [
-              "2000::/3"
-            ],
-            "invert": true
-          }
-        ],
-        "action": "reject"
       },
       {
         "type": "logical",
@@ -559,7 +535,7 @@
           {
             "rule_set": [
               "ads",
-              "geosite-category-ads-all"
+              "geosite-category-ads"
             ]
           }
         ],
@@ -572,6 +548,10 @@
         ],
         "action": "reject",
         "method": "default"
+      },
+      {
+        "network": "icmp",
+        "outbound": "direct"
       },
       {
         "type": "logical",
@@ -613,6 +593,13 @@
       },
       {
         "rule_set": [
+          "cn",
+          "geosite-category-ai-cn"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
           "ai"
         ],
         "outbound": "🃏 AI"
@@ -629,13 +616,6 @@
           "geosite-category-porn"
         ],
         "outbound": "🔞 Porn"
-      },
-      {
-        "rule_set": [
-          "apple-cn",
-          "cn"
-        ],
-        "outbound": "direct"
       },
       {
         "rule_set": [
