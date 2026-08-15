@@ -99,10 +99,8 @@
         }
       },
       {
-        "type": "udp",
-        "tag": "smart-dns",
-        "server": "127.0.0.1",
-        "server_port": 1451
+        "type": "local",
+        "tag": "local-dns"
       },
       {
         "type": "h3",
@@ -194,15 +192,6 @@
         "action": "reject"
       },
       {
-        "query_type": [
-          "SVCB",
-          "HTTPS"
-        ],
-        "match_response": true,
-        "action": "predefined",
-        "rcode": "NOTIMP"
-      },
-      {
         "type": "logical",
         "mode": "and",
         "rules": [
@@ -270,6 +259,15 @@
         "invert": true,
         "action": "evaluate",
         "server": "proxy-dns"
+      },
+      {
+        "query_type": [
+          "SVCB",
+          "HTTPS"
+        ],
+        "match_response": true,
+        "action": "predefined",
+        "rcode": "NOTIMP"
       },
       {
         "type": "logical",

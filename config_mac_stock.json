@@ -110,7 +110,7 @@
         "type": "fakeip",
         "tag": "fakeip-dns",
         "inet4_range": "198.18.0.0/15",
-        "inet6_range": "fc00::/18"
+        "inet6_range": "2001:db8:ca0b::/48"
       }
     ],
     "rules": [
@@ -147,6 +147,24 @@
         ],
         "action": "reject",
         "method": "drop"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "query_type": "AAAA"
+          },
+          {
+            "default_interface_address": [
+              "2000::/4"
+            ],
+            "invert": true
+          }
+        ],
+        "action": "reject",
+        "method": "default",
+        "no_drop": true
       },
       {
         "clash_mode": "Direct",
@@ -296,7 +314,7 @@
     "strategy": "prefer_ipv4",
     "optimistic": {
       "enabled": true,
-      "timeout": "48h0m0s"
+      "timeout": "72h0m0s"
     },
     "reverse_mapping": true
   },
@@ -308,7 +326,7 @@
         "172.18.0.1/30",
         "fdfe:dcba:9876::1/126"
       ],
-      "mtu": 9000,
+      "mtu": 1500,
       "dns_mode": "hijack",
       "dns_address": [
         "172.18.0.2",
@@ -317,7 +335,7 @@
       "auto_route": true,
       "strict_route": true,
       "endpoint_independent_nat": false,
-      "stack": "mixed"
+      "stack": "system"
     }
   ],
   "outbounds": [
@@ -549,22 +567,6 @@
         ],
         "action": "reject",
         "method": "default"
-      },
-      {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "ip_version": 6
-          },
-          {
-            "default_interface_address": [
-              "2000::/3"
-            ],
-            "invert": true
-          }
-        ],
-        "action": "reject"
       },
       {
         "type": "logical",
