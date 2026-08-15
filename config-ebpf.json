@@ -219,6 +219,24 @@
         "method": "drop"
       },
       {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "query_type": "AAAA"
+          },
+          {
+            "default_interface_address": [
+              "2000::/4"
+            ],
+            "invert": true
+          }
+        ],
+        "action": "reject",
+        "method": "default",
+        "no_drop": true
+      },
+      {
         "rule_set": [
           "cn",
           "private",
@@ -561,22 +579,6 @@
         ],
         "action": "reject",
         "method": "default"
-      },
-      {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "ip_version": 6
-          },
-          {
-            "default_interface_address": [
-              "2000::/3"
-            ],
-            "invert": true
-          }
-        ],
-        "action": "reject"
       },
       {
         "clash_mode": "Global",

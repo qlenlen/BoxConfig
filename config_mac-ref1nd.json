@@ -261,15 +261,6 @@
         "server": "proxy-dns"
       },
       {
-        "query_type": [
-          "SVCB",
-          "HTTPS"
-        ],
-        "match_response": true,
-        "action": "predefined",
-        "rcode": "NOTIMP"
-      },
-      {
         "type": "logical",
         "mode": "or",
         "rules": [
