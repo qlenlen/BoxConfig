@@ -538,6 +538,17 @@
         "outbound": "bridge-out"
       },
       {
+        "preferred_by": [
+          "bridge-out"
+        ],
+        "process_name": [
+          "QQMusic",
+          "QQ"
+        ],
+        "action": "route",
+        "outbound": "bridge-out"
+      },
+      {
         "rule_set": "telegramip",
         "invert": true,
         "action": "sniff",
