@@ -99,8 +99,10 @@
         }
       },
       {
-        "type": "local",
-        "tag": "local-dns"
+        "type": "udp",
+        "tag": "smart-dns",
+        "server": "127.0.0.1",
+        "server_port": 1451
       },
       {
         "type": "h3",
@@ -196,6 +198,23 @@
         "mode": "and",
         "rules": [
           {
+            "clash_mode": "AllowAds",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "AwAvenue-Ads"
+            ]
+          }
+        ],
+        "action": "reject",
+        "method": "drop"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
             "query_type": "AAAA"
           },
           {
@@ -208,24 +227,6 @@
         "action": "reject",
         "method": "default",
         "no_drop": true
-      },
-      {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "clash_mode": "AllowAds",
-            "invert": true
-          },
-          {
-            "rule_set": [
-              "ads",
-              "geosite-category-ads"
-            ]
-          }
-        ],
-        "action": "reject",
-        "method": "drop"
       },
       {
         "rule_set": [
@@ -293,11 +294,11 @@
         "rewrite_ttl": 1
       }
     ],
-    "final": "local-dns",
+    "final": "proxy-dns",
     "strategy": "prefer_ipv4",
     "optimistic": {
       "enabled": true,
-      "timeout": "72h0m0s"
+      "timeout": "48h0m0s"
     },
     "reverse_mapping": true
   },
@@ -309,11 +310,16 @@
         "172.18.0.1/30",
         "fdfe:dcba:9876::1/126"
       ],
-      "mtu": 9000,
+      "mtu": 1500,
+      "dns_mode": "hijack",
+      "dns_address": [
+        "172.18.0.2",
+        "fdfe:dcba:9876::2"
+      ],
       "auto_route": true,
       "strict_route": true,
       "endpoint_independent_nat": false,
-      "stack": "mixed"
+      "stack": "system"
     }
   ],
   "outbounds": [
@@ -459,7 +465,6 @@
       {
         "tag": [
           "ai",
-          "ads",
           "cn",
           "cnip",
           "fakeip-filter",
@@ -480,8 +485,7 @@
           "geosite-google",
           "geosite-youtube",
           "geosite-category-ai-cn",
-          "geosite-category-porn",
-          "geosite-category-ads"
+          "geosite-category-porn"
         ],
         "type": "remote",
         "format": "binary",
@@ -496,13 +500,17 @@
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/Webrtc/Webrtc.srs",
         "update_interval": "7d",
         "http_client": "direct-client"
+      },
+      {
+        "tag": "AwAvenue-Ads",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/AwAvenue-Ads.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/qlenlen/AWAvenue-Ads-Rule-srs/raw/refs/heads/main/srs/AWAvenue-Ads-Rule-Singbox-Only.Ads.srs",
+        "http_client": "direct-client"
       }
     ],
     "rules": [
-      {
-        "port": 53,
-        "action": "hijack-dns"
-      },
       {
         "rule_set": "telegramip",
         "invert": true,
@@ -510,7 +518,16 @@
         "timeout": "300ms"
       },
       {
-        "protocol": "dns",
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "protocol": "dns"
+          },
+          {
+            "port": 53
+          }
+        ],
         "action": "hijack-dns"
       },
       {
@@ -523,8 +540,7 @@
           },
           {
             "rule_set": [
-              "ads",
-              "geosite-category-ads"
+              "AwAvenue-Ads"
             ]
           }
         ],
