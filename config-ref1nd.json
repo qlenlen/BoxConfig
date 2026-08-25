@@ -8,17 +8,13 @@
     {
       "tag": "direct-client",
       "detour": "direct"
-    },
-    {
-      "tag": "proxy-client",
-      "detour": "📦 ALL"
     }
   ],
   "providers": [
     {
       "tag": "A",
       "type": "remote",
-      "url": "http://127.0.0.1:3000/download/bp?target=sing-box",
+      "url": "http://127.0.0.1:3000/download/cx?target=sing-box",
       "http_client": "direct-client",
       "update_interval": "24h0m0s",
       "path": "./providers/A.json"
@@ -30,6 +26,14 @@
       "http_client": "direct-client",
       "update_interval": "24h0m0s",
       "path": "./providers/B.json"
+    },
+    {
+      "tag": "C",
+      "type": "remote",
+      "url": "http://127.0.0.1:3000/download/bp?target=sing-box",
+      "http_client": "direct-client",
+      "update_interval": "24h0m0s",
+      "path": "./providers/C.json"
     },
     {
       "tag": "D",
@@ -206,13 +210,30 @@
           },
           {
             "rule_set": [
-              "ads",
-              "geosite-category-ads-all"
+              "AwAvenue-Ads"
             ]
           }
         ],
         "action": "reject",
         "method": "drop"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "query_type": "AAAA"
+          },
+          {
+            "default_interface_address": [
+              "2000::/4"
+            ],
+            "invert": true
+          }
+        ],
+        "action": "reject",
+        "method": "default",
+        "no_drop": true
       },
       {
         "rule_set": [
@@ -358,21 +379,15 @@
       "interrupt_exist_connections": true
     },
     {
-      "tag": "🔔 Google FCM",
-      "type": "selector",
-      "outbounds": [
-        "direct",
-        "🚀 Auto"
-      ],
-      "interrupt_exist_connections": true
-    },
-    {
       "type": "urltest",
       "tag": "🚀 Auto",
       "outbounds": [
         "🍹 Hong Kong",
         "🍍 Taiwan",
-        "🗽 United States"
+        "🗽 United States",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🇰🇷 Korea"
       ],
       "url": "https://cp.cloudflare.com",
       "interval": "3m0s",
@@ -440,12 +455,11 @@
     "default_domain_resolver": "direct-dns",
     "final": "📦 ALL",
     "auto_detect_interface": true,
-    "find_process": true,
+    "find_process": false,
     "rule_set": [
       {
         "tag": [
           "ai",
-          "ads",
           "cn",
           "cnip",
           "fakeip-filter",
@@ -465,8 +479,8 @@
           "geosite-adobe-activation",
           "geosite-google",
           "geosite-youtube",
-          "geosite-category-porn",
-          "geosite-category-ads-all"
+          "geosite-category-ai-cn",
+          "geosite-category-porn"
         ],
         "type": "remote",
         "format": "binary",
@@ -488,7 +502,14 @@
         "format": "binary",
         "path": "./rule_provider/Google_FCM.srs",
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/GoogleFCM/GoogleFCM.srs",
-        "update_interval": "7d",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "AwAvenue-Ads",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/AwAvenue-Ads.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/qlenlen/AWAvenue-Ads-Rule-srs/raw/refs/heads/main/srs/AWAvenue-Ads-Rule-Singbox-Only.Ads.srs",
         "http_client": "direct-client"
       }
     ],
@@ -522,8 +543,7 @@
           },
           {
             "rule_set": [
-              "ads",
-              "geosite-category-ads-all"
+              "AwAvenue-Ads"
             ]
           }
         ],
@@ -559,22 +579,6 @@
         "method": "default"
       },
       {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "ip_version": 6
-          },
-          {
-            "default_interface_address": [
-              "2000::/3"
-            ],
-            "invert": true
-          }
-        ],
-        "action": "reject"
-      },
-      {
         "clash_mode": "Global",
         "outbound": "📦 ALL"
       },
@@ -596,12 +600,6 @@
         "outbound": "direct"
       },
       {
-        "rule_set": [
-          "ai"
-        ],
-        "outbound": "🃏 AI"
-      },
-      {
         "type": "logical",
         "mode": "or",
         "rules": [
@@ -612,7 +610,20 @@
             "port": 5228
           }
         ],
-        "outbound": "🔔 Google FCM"
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "cn",
+          "geosite-category-ai-cn"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "ai"
+        ],
+        "outbound": "🃏 AI"
       },
       {
         "rule_set": [
@@ -632,12 +643,6 @@
           "proxy"
         ],
         "outbound": "📦 ALL"
-      },
-      {
-        "rule_set": [
-          "cn"
-        ],
-        "outbound": "direct"
       },
       {
         "action": "resolve",

@@ -524,10 +524,10 @@
         "http_client": "direct-client"
       },
       {
-        "tag": "AWAvenue-Ads",
+        "tag": "AwAvenue-Ads",
         "type": "remote",
         "format": "binary",
-        "path": "./rule_provider/AWAvenue-Ads.srs",
+        "path": "./rule_provider/AwAvenue-Ads.srs",
         "url": "https://v6.gh-proxy.org/https://github.com/qlenlen/AWAvenue-Ads-Rule-srs/raw/refs/heads/main/srs/AWAvenue-Ads-Rule-Singbox-Only.Ads.srs",
         "http_client": "direct-client"
       }
