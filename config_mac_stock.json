@@ -140,8 +140,7 @@
           },
           {
             "rule_set": [
-              "ads",
-              "geosite-category-ads"
+              "AWAvenue-Ads"
             ]
           }
         ],
@@ -485,7 +484,6 @@
       {
         "tag": [
           "ai",
-          "ads",
           "apple-cn",
           "cn",
           "cnip",
@@ -506,8 +504,7 @@
           "geosite-google",
           "geosite-youtube",
           "geosite-category-ai-cn",
-          "geosite-category-porn",
-          "geosite-category-ads"
+          "geosite-category-porn"
         ],
         "type": "remote",
         "format": "binary",
@@ -518,7 +515,13 @@
         "type": "remote",
         "format": "binary",
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/Webrtc/Webrtc.srs",
-        "update_interval": "7d",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "AWAvenue-Ads",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://v6.gh-proxy.org/https://github.com/qlenlen/AWAvenue-Ads-Rule-srs/raw/refs/heads/main/srs/AWAvenue-Ads-Rule-Singbox-Only.Ads.srs",
         "http_client": "direct-client"
       }
     ],
@@ -589,8 +592,7 @@
           },
           {
             "rule_set": [
-              "ads",
-              "geosite-category-ads"
+              "AWAvenue-Ads"
             ]
           }
         ],

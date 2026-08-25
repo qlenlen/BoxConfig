@@ -210,8 +210,7 @@
           },
           {
             "rule_set": [
-              "ads",
-              "geosite-category-ads"
+              "AwAvenue-Ads"
             ]
           }
         ],
@@ -313,14 +312,28 @@
   "inbounds": [
     {
       "type": "ebpf",
-      "redirect_address": [
-        "127.128.0.0/9",
-        "fd53:696e:672d:626f::/64"
-      ],
+      "tag": "ebpf-in",
+      "mode": "hybrid",
       "bypass_rule_set": [
         "cnip"
       ],
-      "dns_mode": "hijack"
+      "local": {
+        "ipv6_mode": "auto",
+        "include_uid": [],
+        "exclude_uid": [],
+        "include_package": [],
+        "exclude_package": []
+      },
+      "shared": {
+        "interface": [
+          "wlan2"
+        ],
+        "ipv6_mode": "always",
+        "include_source_cidr": [],
+        "exclude_source_cidr": [],
+        "include_mac_address": [],
+        "exclude_mac_address": []
+      }
     }
   ],
   "outbounds": [
@@ -461,12 +474,11 @@
     "default_domain_resolver": "direct-dns",
     "final": "📦 ALL",
     "auto_detect_interface": true,
-    "find_process": true,
+    "find_process": false,
     "rule_set": [
       {
         "tag": [
           "ai",
-          "ads",
           "cn",
           "cnip",
           "fakeip-filter",
@@ -487,8 +499,7 @@
           "geosite-google",
           "geosite-youtube",
           "geosite-category-ai-cn",
-          "geosite-category-porn",
-          "geosite-category-ads"
+          "geosite-category-porn"
         ],
         "type": "remote",
         "format": "binary",
@@ -510,7 +521,14 @@
         "format": "binary",
         "path": "./rule_provider/Google_FCM.srs",
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/GoogleFCM/GoogleFCM.srs",
-        "update_interval": "7d",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "AWAvenue-Ads",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/AWAvenue-Ads.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/qlenlen/AWAvenue-Ads-Rule-srs/raw/refs/heads/main/srs/AWAvenue-Ads-Rule-Singbox-Only.Ads.srs",
         "http_client": "direct-client"
       }
     ],
@@ -544,8 +562,7 @@
           },
           {
             "rule_set": [
-              "ads",
-              "geosite-category-ads"
+              "AwAvenue-Ads"
             ]
           }
         ],
