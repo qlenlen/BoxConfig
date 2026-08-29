@@ -182,12 +182,6 @@
         "server": "proxy-dns"
       },
       {
-        "rule_set": [
-          "Webrtc"
-        ],
-        "action": "reject"
-      },
-      {
         "query_type": [
           "PTR"
         ],
@@ -493,15 +487,6 @@
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/{tag}.srs"
       },
       {
-        "tag": "Webrtc",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/Webrtc.srs",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/Webrtc/Webrtc.srs",
-        "update_interval": "7d",
-        "http_client": "direct-client"
-      },
-      {
         "tag": "AwAvenue-Ads",
         "type": "remote",
         "format": "binary",
@@ -548,7 +533,6 @@
       },
       {
         "rule_set": [
-          "Webrtc",
           "geosite-adobe-activation"
         ],
         "action": "reject",
