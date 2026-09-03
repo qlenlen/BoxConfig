@@ -623,6 +623,12 @@
         "outbound": "direct"
       },
       {
+        "domain_suffix": [
+          "opencode.ai"
+        ],
+        "outbound": "🃏 AI"
+      },
+      {
         "rule_set": [
           "ai"
         ],
