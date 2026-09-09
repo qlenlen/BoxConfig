@@ -1,0 +1,94 @@
+{
+  "experimental": {
+    "urltest_unified_delay": true,
+    "clash_api": {
+      "external_controller": "0.0.0.0:9090",
+      "secret": "",
+      "external_ui": "dashboard",
+      "external_ui_download_url": "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+      "external_ui_http_client": "direct-client",
+      "default_mode": "rule",
+      "access_control_allow_origin": [
+        "*"
+      ],
+      "access_control_allow_private_network": true
+    },
+    "cache_file": {
+      "enabled": false
+    }
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "udp",
+        "tag": "ali",
+        "server": "223.5.5.5"
+      },
+      {
+        "tag": "direct-dns",
+        "type": "group",
+        "servers": [
+          "ali"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "clash_mode": "rule",
+        "server": "direct-dns"
+      }
+    ],
+    "final": "direct-dns",
+    "strategy": "prefer_ipv4"
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "address": [
+        "172.18.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "mtu": 1500,
+      "dns_mode": "hijack",
+      "auto_route": true,
+      "auto_redirect": true,
+      "strict_route": true
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "http",
+      "tag": "mitm",
+      "server": "127.0.0.1",
+      "server_port": 8080
+    },
+    {
+      "type": "direct",
+      "tag": "direct",
+      "domain_resolver": "direct-dns"
+    }
+  ],
+  "route": {
+    "default_domain_resolver": "direct-dns",
+    "auto_detect_interface": true,
+    "find_process": true,
+    "rules": [
+      {
+        "action": "sniff",
+        "timeout": "300ms"
+      },
+      {
+        "domain_keyword": [
+          "ziyun188"
+        ],
+        "action": "route",
+        "outbound": "mitm"
+      },
+      {
+        "action": "route",
+        "outbound": "direct"
+      }
+    ]
+  }
+}
