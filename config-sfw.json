@@ -1,0 +1,675 @@
+{
+  "log": {
+    "level": "error",
+    "timestamp": true
+  },
+  "http_clients": [
+    {
+      "tag": "direct-client",
+      "detour": "direct"
+    }
+  ],
+  "providers": [
+    {
+      "tag": "A",
+      "type": "remote",
+      "url": "http://127.0.0.1:3000/download/cx?target=sing-box",
+      "http_client": "direct-client",
+      "update_interval": "24h0m0s",
+      "path": "./providers/A.json"
+    },
+    {
+      "tag": "B",
+      "type": "remote",
+      "url": "http://127.0.0.1:3000/download/glados?target=sing-box",
+      "http_client": "direct-client",
+      "update_interval": "24h0m0s",
+      "path": "./providers/B.json"
+    },
+    {
+      "tag": "C",
+      "type": "remote",
+      "url": "http://127.0.0.1:3000/download/bp?target=sing-box",
+      "http_client": "direct-client",
+      "update_interval": "24h0m0s",
+      "path": "./providers/C.json"
+    },
+    {
+      "tag": "D",
+      "type": "remote",
+      "url": "http://127.0.0.1:3000/download/tg?target=sing-box",
+      "http_client": "direct-client",
+      "update_interval": "24h0m0s",
+      "path": "./providers/D.json"
+    }
+  ],
+  "experimental": {
+    "urltest_unified_delay": true,
+    "clash_api": {
+      "external_controller": "0.0.0.0:9090",
+      "secret": "",
+      "external_ui": "dashboard",
+      "external_ui_download_url": "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+      "external_ui_http_client": "direct-client",
+      "default_mode": "rule",
+      "access_control_allow_origin": [
+        "*"
+      ],
+      "access_control_allow_private_network": true
+    },
+    "cache_file": {
+      "enabled": true,
+      "path": "./cache.db",
+      "store_fakeip": true,
+      "store_dns": true
+    }
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns_hosts",
+        "type": "hosts",
+        "predefined": {
+          "dns.google": [
+            "8.8.8.8",
+            "8.8.4.4",
+            "2001:4860:4860::8888",
+            "2001:4860:4860::8844"
+          ],
+          "dns.quad9.net": [
+            "149.112.112.112",
+            "9.9.9.9"
+          ],
+          "doh.pub": [
+            "1.12.12.12",
+            "120.53.53.53"
+          ],
+          "cloudflare-dns.com": [
+            "1.1.1.1",
+            "1.0.0.1",
+            "2606:4700:4700::1111",
+            "2606:4700:4700::1001"
+          ],
+          "dns.alidns.com": [
+            "223.5.5.5",
+            "223.6.6.6",
+            "2400:3200::1",
+            "2400:3200:baba::1"
+          ]
+        }
+      },
+      {
+        "type": "udp",
+        "tag": "smart-dns",
+        "server": "127.0.0.1",
+        "server_port": 1451
+      },
+      {
+        "type": "h3",
+        "tag": "ali-h3",
+        "server": "dns.alidns.com",
+        "domain_resolver": "dns_hosts"
+      },
+      {
+        "type": "https",
+        "tag": "tencent-doh",
+        "server": "doh.pub",
+        "domain_resolver": "dns_hosts"
+      },
+      {
+        "type": "https",
+        "tag": "360-doh",
+        "server": "doh.360.cn",
+        "domain_resolver": "ali-h3"
+      },
+      {
+        "type": "https",
+        "tag": "google-doh",
+        "server": "dns.google",
+        "domain_resolver": "dns_hosts",
+        "detour": "📦 ALL"
+      },
+      {
+        "type": "https",
+        "tag": "cloudflare-doh",
+        "server": "cloudflare-dns.com",
+        "domain_resolver": "dns_hosts",
+        "detour": "📦 ALL"
+      },
+      {
+        "tag": "quad9-doh",
+        "type": "https",
+        "server": "dns.quad9.net",
+        "domain_resolver": "dns_hosts",
+        "detour": "📦 ALL"
+      },
+      {
+        "tag": "direct-dns",
+        "type": "group",
+        "servers": [
+          "ali-h3",
+          "tencent-doh",
+          "360-doh"
+        ]
+      },
+      {
+        "tag": "proxy-dns",
+        "type": "group",
+        "servers": [
+          "google-doh",
+          "cloudflare-doh",
+          "quad9-doh"
+        ]
+      },
+      {
+        "type": "fakeip",
+        "tag": "fakeip-dns",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      }
+    ],
+    "rules": [
+      {
+        "preferred_by": "dns_hosts",
+        "server": "dns_hosts"
+      },
+      {
+        "rule_set": [
+          "Google_FCM"
+        ],
+        "server": "google-doh"
+      },
+      {
+        "clash_mode": "Direct",
+        "server": "direct-dns"
+      },
+      {
+        "clash_mode": "Global",
+        "server": "proxy-dns"
+      },
+      {
+        "query_type": [
+          "PTR"
+        ],
+        "action": "reject"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "AllowAds",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "AwAvenue-Ads"
+            ]
+          }
+        ],
+        "action": "reject",
+        "method": "drop"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "query_type": "AAAA"
+          },
+          {
+            "default_interface_address": [
+              "2000::/4"
+            ],
+            "invert": true
+          }
+        ],
+        "action": "reject",
+        "method": "default",
+        "no_drop": true
+      },
+      {
+        "rule_set": [
+          "cn",
+          "private",
+          "fakeip-filter"
+        ],
+        "server": "direct-dns"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": [
+              "proxy"
+            ]
+          },
+          {
+            "query_type": [
+              "A",
+              "AAAA"
+            ]
+          }
+        ],
+        "server": "fakeip-dns",
+        "rewrite_ttl": 1
+      },
+      {
+        "rule_set": "gfw",
+        "invert": true,
+        "action": "evaluate",
+        "server": "proxy-dns"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "match_response": true,
+            "ip_is_private": true
+          },
+          {
+            "match_response": true,
+            "rule_set": [
+              "cnip"
+            ]
+          }
+        ],
+        "action": "route",
+        "server": "direct-dns"
+      },
+      {
+        "match_response": true,
+        "response_rcode": "NOERROR",
+        "action": "respond"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "route",
+        "server": "fakeip-dns",
+        "rewrite_ttl": 1
+      }
+    ],
+    "final": "proxy-dns",
+    "strategy": "prefer_ipv4",
+    "optimistic": {
+      "enabled": true,
+      "timeout": "48h0m0s"
+    },
+    "reverse_mapping": true
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "address": [
+        "172.18.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "mtu": 1500,
+      "dns_mode": "hijack",
+      "dns_address": [
+        "172.18.0.2",
+        "fdfe:dcba:9876::2"
+      ],
+      "auto_route": true,
+      "strict_route": true,
+      "endpoint_independent_nat": false,
+      "stack": "system"
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "📦 ALL",
+      "type": "selector",
+      "outbounds": [
+        "🚀 Auto",
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🗽 United States",
+        "🇰🇷 Korea"
+      ],
+      "default": "🚀 Auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🃏 AI",
+      "type": "selector",
+      "outbounds": [
+        "🚀 Auto",
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🗽 United States",
+        "🇰🇷 Korea"
+      ],
+      "default": "🚀 Auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🔞 Porn",
+      "type": "selector",
+      "outbounds": [
+        "🚀 Auto",
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🗽 United States",
+        "🇰🇷 Korea"
+      ],
+      "default": "🚀 Auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🧭 Google Services",
+      "type": "selector",
+      "outbounds": [
+        "🚀 Auto",
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🗽 United States",
+        "🇰🇷 Korea"
+      ],
+      "default": "🚀 Auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "🚀 Auto",
+      "outbounds": [
+        "🍹 Hong Kong",
+        "🍍 Taiwan",
+        "🗽 United States",
+        "🎡 Singapore",
+        "⛩️ Japan",
+        "🇰🇷 Korea"
+      ],
+      "url": "https://cp.cloudflare.com",
+      "interval": "3m0s",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🍹 Hong Kong",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)香港|hk|hongkong|🇭🇰",
+      "url": "https://cp.cloudflare.com",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🍍 Taiwan",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)台湾|tw|taiwan|taipei|🇹🇼",
+      "url": "https://cp.cloudflare.com",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🎡 Singapore",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)新加坡|sg|singapore|狮城|🇸🇬",
+      "url": "https://cp.cloudflare.com",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "⛩️ Japan",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)日本|jp|japan|tokyo|osaka|东京|🇯🇵",
+      "url": "https://cp.cloudflare.com",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🗽 United States",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)美国|us|united states|america|los angeles|san jose|silicon valley|🇺🇸",
+      "url": "https://cp.cloudflare.com",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "🇰🇷 Korea",
+      "type": "urltest",
+      "use_all_providers": true,
+      "include": "(?i)韩国|kr|korea|seoul|🇰🇷",
+      "url": "https://cp.cloudflare.com",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "direct",
+      "type": "direct",
+      "domain_resolver": "direct-dns"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    },
+    {
+      "type": "bridge",
+      "tag": "bridge-out"
+    }
+  ],
+  "route": {
+    "default_domain_resolver": "direct-dns",
+    "final": "📦 ALL",
+    "auto_detect_interface": true,
+    "find_process": false,
+    "rule_set": [
+      {
+        "tag": [
+          "ai",
+          "cn",
+          "cnip",
+          "fakeip-filter",
+          "gfw",
+          "proxy",
+          "private",
+          "privateip",
+          "telegramip"
+        ],
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/{tag}.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/{tag}.srs"
+      },
+      {
+        "tag": [
+          "geosite-adobe-activation",
+          "geosite-google",
+          "geosite-youtube",
+          "geosite-category-ai-cn",
+          "geosite-category-porn"
+        ],
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/{tag}.srs",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/{tag}.srs"
+      },
+      {
+        "tag": "Google_FCM",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/Google_FCM.srs",
+        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/GoogleFCM/GoogleFCM.srs",
+        "http_client": "direct-client"
+      },
+      {
+        "tag": "AwAvenue-Ads",
+        "type": "remote",
+        "format": "binary",
+        "path": "./rule_provider/AwAvenue-Ads.srs",
+        "url": "https://v6.gh-proxy.org/https://github.com/qlenlen/AWAvenue-Ads-Rule-srs/raw/refs/heads/main/srs/AWAvenue-Ads-Rule-Singbox-Only.Ads.srs",
+        "http_client": "direct-client"
+      }
+    ],
+    "rules": [
+      {
+        "port": 53,
+        "action": "hijack-dns"
+      },
+      {
+        "preferred_by": [
+          "bridge-out"
+        ],
+        "process_name": [
+          "qmbrowser.exe",
+          "QQ.exe"
+        ],
+        "action": "route",
+        "outbound": "bridge-out"
+      },
+      {
+        "preferred_by": [
+          "bridge-out"
+        ],
+        "rule_set": [
+          "cnip"
+        ],
+        "action": "route",
+        "outbound": "bridge-out"
+      },
+      {
+        "rule_set": "telegramip",
+        "invert": true,
+        "action": "sniff",
+        "timeout": "300ms"
+      },
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "AllowAds",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "AwAvenue-Ads"
+            ]
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "rule_set": [
+          "geosite-adobe-activation"
+        ],
+        "action": "reject",
+        "method": "default"
+      },
+      {
+        "network": "icmp",
+        "outbound": "direct"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "network": "udp",
+            "port": 443
+          },
+          {
+            "rule_set": [
+              "proxy"
+            ]
+          }
+        ],
+        "action": "reject",
+        "method": "default"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "📦 ALL"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "ip_is_private": true
+          },
+          {
+            "rule_set": "private"
+          }
+        ],
+        "outbound": "direct"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "rule_set": "Google_FCM"
+          },
+          {
+            "port": 5228
+          }
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "cn",
+          "geosite-category-ai-cn"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "ai"
+        ],
+        "outbound": "🃏 AI"
+      },
+      {
+        "rule_set": [
+          "geosite-youtube",
+          "geosite-google"
+        ],
+        "outbound": "🧭 Google Services"
+      },
+      {
+        "rule_set": [
+          "geosite-category-porn"
+        ],
+        "outbound": "🔞 Porn"
+      },
+      {
+        "rule_set": [
+          "proxy"
+        ],
+        "outbound": "📦 ALL"
+      },
+      {
+        "action": "resolve",
+        "match_only": true
+      },
+      {
+        "rule_set": [
+          "privateip",
+          "cnip"
+        ],
+        "outbound": "direct"
+      }
+    ]
+  }
+}
