@@ -52,7 +52,6 @@
     "cache_file": {
       "enabled": true,
       "path": "./cache.db",
-      "store_fakeip": true,
       "store_dns": true
     }
   },
@@ -89,12 +88,6 @@
             "2400:3200:baba::1"
           ]
         }
-      },
-      {
-        "type": "udp",
-        "tag": "smart-dns",
-        "server": "127.0.0.1",
-        "server_port": 1451
       },
       {
         "type": "h3",
@@ -302,11 +295,9 @@
         "172.18.0.1/30",
         "fdfe:dcba:9876::1/126"
       ],
-      "mtu": 1500,
       "dns_mode": "hijack",
       "auto_route": true,
-      "auto_redirect": true,
-      "strict_route": true
+      "auto_redirect": true
     }
   ],
   "outbounds": [
@@ -322,8 +313,7 @@
         "🗽 United States",
         "🇰🇷 Korea"
       ],
-      "default": "🚀 Auto",
-      "interrupt_exist_connections": true
+      "default": "🚀 Auto"
     },
     {
       "tag": "🃏 AI",
@@ -337,8 +327,7 @@
         "🗽 United States",
         "🇰🇷 Korea"
       ],
-      "default": "🚀 Auto",
-      "interrupt_exist_connections": true
+      "default": "🚀 Auto"
     },
     {
       "tag": "🔞 Porn",
@@ -352,8 +341,7 @@
         "🗽 United States",
         "🇰🇷 Korea"
       ],
-      "default": "🚀 Auto",
-      "interrupt_exist_connections": true
+      "default": "🚀 Auto"
     },
     {
       "tag": "🧭 Google Services",
@@ -367,8 +355,16 @@
         "🗽 United States",
         "🇰🇷 Korea"
       ],
-      "default": "🚀 Auto",
-      "interrupt_exist_connections": true
+      "default": "🚀 Auto"
+    },
+    {
+      "tag": "🏸 Sports",
+      "type": "selector",
+      "outbounds": [
+        "mitm",
+        "direct"
+      ],
+      "default": "direct"
     },
     {
       "type": "urltest",
@@ -382,56 +378,49 @@
         "🇰🇷 Korea"
       ],
       "url": "https://cp.cloudflare.com",
-      "interval": "3m0s",
-      "interrupt_exist_connections": true
+      "interval": "3m0s"
     },
     {
       "tag": "🍹 Hong Kong",
       "type": "urltest",
       "use_all_providers": true,
       "include": "(?i)香港|hk|hongkong|🇭🇰",
-      "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "url": "https://cp.cloudflare.com"
     },
     {
       "tag": "🍍 Taiwan",
       "type": "urltest",
       "use_all_providers": true,
       "include": "(?i)台湾|tw|taiwan|taipei|🇹🇼",
-      "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "url": "https://cp.cloudflare.com"
     },
     {
       "tag": "🎡 Singapore",
       "type": "urltest",
       "use_all_providers": true,
       "include": "(?i)新加坡|sg|singapore|狮城|🇸🇬",
-      "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "url": "https://cp.cloudflare.com"
     },
     {
       "tag": "⛩️ Japan",
       "type": "urltest",
       "use_all_providers": true,
       "include": "(?i)日本|jp|japan|tokyo|osaka|东京|🇯🇵",
-      "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "url": "https://cp.cloudflare.com"
     },
     {
       "tag": "🗽 United States",
       "type": "urltest",
       "use_all_providers": true,
       "include": "(?i)美国|us|united states|america|los angeles|san jose|silicon valley|🇺🇸",
-      "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "url": "https://cp.cloudflare.com"
     },
     {
       "tag": "🇰🇷 Korea",
       "type": "urltest",
       "use_all_providers": true,
       "include": "(?i)韩国|kr|korea|seoul|🇰🇷",
-      "url": "https://cp.cloudflare.com",
-      "interrupt_exist_connections": true
+      "url": "https://cp.cloudflare.com"
     },
     {
       "tag": "direct",
@@ -439,8 +428,14 @@
       "domain_resolver": "direct-dns"
     },
     {
-      "type": "block",
-      "tag": "block"
+      "type": "http",
+      "tag": "mitm",
+      "server": "127.0.0.1",
+      "server_port": 8080
+    },
+    {
+      "type": "bridge",
+      "tag": "bridge-out"
     }
   ],
   "route": {
@@ -498,7 +493,24 @@
     ],
     "rules": [
       {
-        "rule_set": "cnip",
+        "port": 53,
+        "action": "hijack-dns"
+      },
+      {
+        "preferred_by": "bridge-out",
+        "action": "route",
+        "domain_keyword": [
+          "ziyun188"
+        ],
+        "outbound": "🏸 Sports"
+      },
+      {
+        "preferred_by": "bridge-out",
+        "action": "route",
+        "rule_set": "cnip"
+      },
+      {
+        "ip_is_private": true,
         "action": "bypass"
       },
       {
@@ -508,16 +520,7 @@
         "timeout": "300ms"
       },
       {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "protocol": "dns"
-          },
-          {
-            "port": 53
-          }
-        ],
+        "protocol": "dns",
         "action": "hijack-dns"
       },
       {
@@ -565,6 +568,13 @@
         "method": "default"
       },
       {
+        "domain_keyword": [
+          "ziyun188"
+        ],
+        "action": "route",
+        "outbound": "🏸 Sports"
+      },
+      {
         "clash_mode": "Global",
         "outbound": "📦 ALL"
       },
@@ -573,16 +583,7 @@
         "outbound": "direct"
       },
       {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "ip_is_private": true
-          },
-          {
-            "rule_set": "private"
-          }
-        ],
+        "rule_set": "private",
         "outbound": "direct"
       },
       {
