@@ -159,6 +159,12 @@
         "server": "dns_hosts"
       },
       {
+        "domain_keyword": [
+          "ziyun188"
+        ],
+        "server": "fakeip-dns"
+      },
+      {
         "rule_set": [
           "Google_FCM"
         ],
@@ -432,10 +438,6 @@
       "tag": "mitm",
       "server": "127.0.0.1",
       "server_port": 8080
-    },
-    {
-      "type": "bridge",
-      "tag": "bridge-out"
     }
   ],
   "route": {
@@ -497,7 +499,9 @@
         "action": "hijack-dns"
       },
       {
-        "preferred_by": "bridge-out",
+        "action": "resolve"
+      },
+      {
         "action": "route",
         "domain_keyword": [
           "ziyun188"
@@ -505,13 +509,8 @@
         "outbound": "🏸 Sports"
       },
       {
-        "preferred_by": "bridge-out",
-        "action": "route",
+        "action": "bypass",
         "rule_set": "cnip"
-      },
-      {
-        "ip_is_private": true,
-        "action": "bypass"
       },
       {
         "rule_set": "telegramip",
@@ -568,13 +567,6 @@
         "method": "default"
       },
       {
-        "domain_keyword": [
-          "ziyun188"
-        ],
-        "action": "route",
-        "outbound": "🏸 Sports"
-      },
-      {
         "clash_mode": "Global",
         "outbound": "📦 ALL"
       },
@@ -583,7 +575,16 @@
         "outbound": "direct"
       },
       {
-        "rule_set": "private",
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "ip_is_private": true
+          },
+          {
+            "rule_set": "private"
+          }
+        ],
         "outbound": "direct"
       },
       {
