@@ -503,6 +503,13 @@
       },
       {
         "action": "route",
+        "domain": [
+          "services.googleapis.cn"
+        ],
+        "outbound": "🧭 Google Services"
+      },
+      {
+        "action": "route",
         "domain_keyword": [
           "ziyun188"
         ],
