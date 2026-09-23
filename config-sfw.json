@@ -33,14 +33,6 @@
       "http_client": "direct-client",
       "update_interval": "24h0m0s",
       "path": "./providers/C.json"
-    },
-    {
-      "tag": "D",
-      "type": "remote",
-      "url": "http://127.0.0.1:3000/download/tg?target=sing-box",
-      "http_client": "direct-client",
-      "update_interval": "24h0m0s",
-      "path": "./providers/D.json"
     }
   ],
   "experimental": {
