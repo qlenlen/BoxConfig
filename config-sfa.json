@@ -437,7 +437,8 @@
       "type": "http",
       "tag": "mitm",
       "server": "127.0.0.1",
-      "server_port": 8080
+      "server_port": 8080,
+      "version": "1"
     }
   ],
   "route": {
