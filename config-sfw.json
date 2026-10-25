@@ -160,12 +160,6 @@
         "server": "dns_hosts"
       },
       {
-        "rule_set": [
-          "Google_FCM"
-        ],
-        "server": "google-doh"
-      },
-      {
         "clash_mode": "Direct",
         "server": "direct-dns"
       },
@@ -475,14 +469,6 @@
         "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/CHIZI-0618/v2ray-rules-dat/release/singbox_rule_set/{tag}.srs"
       },
       {
-        "tag": "Google_FCM",
-        "type": "remote",
-        "format": "binary",
-        "path": "./rule_provider/Google_FCM.srs",
-        "url": "https://v6.gh-proxy.org/https://raw.githubusercontent.com/milangree/rules/main/rules/singbox/GoogleFCM/GoogleFCM.srs",
-        "http_client": "direct-client"
-      },
-      {
         "tag": "AwAvenue-Ads",
         "type": "remote",
         "format": "binary",
@@ -588,19 +574,6 @@
           },
           {
             "rule_set": "private"
-          }
-        ],
-        "outbound": "direct"
-      },
-      {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "rule_set": "Google_FCM"
-          },
-          {
-            "port": 5228
           }
         ],
         "outbound": "direct"
